@@ -67,6 +67,12 @@ export async function fetchAPI(
     path
   )}${queryString ? `?${queryString}` : ""}`;
 
+  // Prevent Next.js static generation from hanging on Vercel if backend is not linked yet
+  if (process.env.VERCEL && (requestUrl.includes("127.0.0.1") || requestUrl.includes("localhost"))) {
+    console.warn(`Skipping fetch to localhost on Vercel during build: ${requestUrl}`);
+    return { data: null, error: true, message: "Skipped fetch during Vercel build" };
+  }
+
   const defaultOptions = {
     method: "GET",
     headers: {
