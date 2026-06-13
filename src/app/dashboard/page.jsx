@@ -27,7 +27,7 @@ export default async function DashboardPage() {
   // Fetch fresh user data from Strapi to bypass stale session cookies
   let freshUser = {};
   try {
-    const res = await fetch(`http://127.0.0.1:1337/api/users/me?populate=*`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://127.0.0.1:1337'}/api/users/me?populate=*`, {
       headers: {
         Authorization: `Bearer ${session.jwt}`,
       },
