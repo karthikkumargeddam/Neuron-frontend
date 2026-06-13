@@ -15,6 +15,7 @@ import {
 import Link from "next/link";
 import ResourceMonitor from "@/components/ResourceMonitor";
 import ActivityCalendarClient from "@/components/ActivityCalendarClient";
+import CourseRecommendations from "@/components/CourseRecommendations";
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
@@ -209,6 +210,9 @@ export default async function DashboardPage() {
               
               <ActivityCalendarClient />
             </div>
+
+            {/* AI Course Recommendations Carousel */}
+            <CourseRecommendations />
 
           </div>
 

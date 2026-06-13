@@ -3,6 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
+import { Search } from "lucide-react";
+import CommandPalette from "./CommandPalette";
+import NotificationBell from "./NotificationBell";
 
 export default function GlobalNav() {
   const pathname = usePathname();
@@ -35,10 +38,25 @@ export default function GlobalNav() {
                   </span>
                 )}
               </div>
+              
+              {/* Cmd+K Search Button */}
+              <button 
+                onClick={() => document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }))}
+                className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors text-neutral-400 text-sm font-mono group"
+              >
+                <Search className="w-4 h-4 group-hover:text-white transition-colors" />
+                <span className="group-hover:text-white transition-colors">Search</span>
+                <kbd className="ml-2 px-1.5 py-0.5 rounded bg-black/50 border border-white/10 text-[10px] text-neutral-500">⌘K</kbd>
+              </button>
+
               <Link href="/dashboard" className="flex items-center gap-2 px-3 py-2 rounded-full text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/10 transition-colors border border-transparent hover:border-cyan-500/30">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
                 <span className="text-sm font-mono hidden md:block">Dashboard</span>
               </Link>
+              
+              {/* Notification Bell */}
+              <NotificationBell />
+
               <button 
                 onClick={() => signOut({ callbackUrl: "/" })}
                 className="px-4 py-2 text-sm font-mono text-red-400 hover:text-red-300 border border-red-900/50 hover:border-red-500 hover:bg-red-500/10 hover:shadow-[0_0_15px_rgba(239,68,68,0.3)] transition-all rounded-full flex items-center gap-2"
@@ -90,6 +108,7 @@ export default function GlobalNav() {
           </nav>
         </div>
       </div>
+      <CommandPalette />
     </header>
   );
 }
