@@ -16,7 +16,7 @@ export default function CourseDiscussions({ courseId }) {
 
   const fetchComments = async () => {
     try {
-      const res = await fetch(`http://localhost:1337/api/comments/api::course.course:${courseId}`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://127.0.0.1:1337'}/api/comments/api::course.course:${courseId}`);
       if (res.ok) {
         const data = await res.json();
         // The plugin usually returns an array or paginated object, adapting standard format
@@ -40,7 +40,7 @@ export default function CourseDiscussions({ courseId }) {
     }
 
     try {
-      const res = await fetch(`http://localhost:1337/api/comments/api::course.course:${courseId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://127.0.0.1:1337'}/api/comments/api::course.course:${courseId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

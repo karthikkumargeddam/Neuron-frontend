@@ -49,7 +49,7 @@ export default function CheckoutPage() {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:1337/api/payment/verify", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://127.0.0.1:1337'}/api/payment/verify`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -43,7 +43,7 @@ export default function CodeEditorClient() {
 
   const fetchSnippets = async () => {
     try {
-      const res = await fetch(`http://localhost:1337/api/code-snippets?filters[userEmail][$eq]=${session.user.email}&sort=createdAt:desc`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://127.0.0.1:1337'}/api/code-snippets?filters[userEmail][$eq]=${session.user.email}&sort=createdAt:desc`);
       const data = await res.json();
       if (data && data.data) {
         setSavedSnippets(data.data);
@@ -74,7 +74,7 @@ export default function CodeEditorClient() {
     
     setIsSaving(true);
     try {
-      const res = await fetch('http://localhost:1337/api/code-snippets', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://127.0.0.1:1337'}/api/code-snippets`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

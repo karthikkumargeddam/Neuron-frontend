@@ -17,7 +17,7 @@ export function NotificationProvider({ children }) {
 
   useEffect(() => {
     // Connect to Strapi WebSocket server
-    const socketInstance = io(process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337', {
+    const socketInstance = io(process.env.NEXT_PUBLIC_STRAPI_URL || `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://127.0.0.1:1337'}`, {
       withCredentials: true,
     });
 
