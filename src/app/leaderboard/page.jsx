@@ -2,6 +2,16 @@ import GlobalNav from '@/components/GlobalNav';
 import { Trophy, Medal, Star, ArrowUpRight, Award, TrendingUp } from 'lucide-react';
 import Image from 'next/image';
 
+export const metadata = {
+  title: "Global Leaderboard | NeuronLabs",
+  description: "Check the global rankings of top-performing data scientists, researchers, and engineers on NeuronLabs.",
+  openGraph: {
+    title: "Global Leaderboard | NeuronLabs",
+    description: "The top-performing data scientists and engineers on NeuronLabs.",
+    images: ["/og-leaderboard.png"]
+  }
+};
+
 async function getProfiles() {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL || `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://127.0.0.1:1337'}`}/api/profiles?sort[0]=rank:asc`, { next: { revalidate: 60 } });

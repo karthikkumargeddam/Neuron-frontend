@@ -17,13 +17,18 @@
     "next": "16.2.7",
     "next-auth": "^4.24.14",
     "react": "19.2.4",
+    "react-activity-calendar": "^3.2.0",
     "react-dom": "19.2.4",
     "react-hot-toast": "^2.6.0",
     "react-markdown": "^10.1.0",
     "react-qr-code": "^2.1.1",
     "reactflow": "^11.11.4",
+    "recharts": "^3.8.1",
     "rehype-slug": "^6.0.0",
-    "socket.io-client": "^4.8.3"
+    "socket.io-client": "^4.8.3",
+    "y-monaco": "^0.1.6",
+    "y-websocket": "^3.0.0",
+    "yjs": "^13.6.31"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
