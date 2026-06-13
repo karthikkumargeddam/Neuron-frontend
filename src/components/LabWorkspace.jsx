@@ -15,6 +15,36 @@ export default function LabWorkspace({ initialCodeSnippet, initialTerminalOutput
   const [isCompilerReady, setIsCompilerReady] = useState(false);
   const [pyodideInstance, setPyodideInstance] = useState(null);
 
+  // AI Tutor State
+  const [isAIOpen, setIsAIOpen] = useState(false);
+  const [aiChat, setAiChat] = useState([{ role: 'assistant', content: "Hello! I'm your NeuronLabs PhD AI Tutor. I can see your Python code. How can I assist your research today?" }]);
+  const [aiInput, setAiInput] = useState("");
+  const [isAiTyping, setIsAiTyping] = useState(false);
+
+  const handleAskAI = async (e) => {
+    e?.preventDefault();
+    if (!aiInput.trim()) return;
+    const currentInput = aiInput;
+    const newChat = [...aiChat, { role: 'user', content: currentInput }];
+    setAiChat(newChat);
+    setAiInput("");
+    setIsAiTyping(true);
+
+    try {
+      const res = await fetch('/api/ai-tutor', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: currentInput, code, language: 'python' })
+      });
+      const data = await res.json();
+      setAiChat([...newChat, { role: 'assistant', content: data.reply }]);
+    } catch (err) {
+      setAiChat([...newChat, { role: 'assistant', content: "[Error] Connection to AI Tutor core failed." }]);
+    } finally {
+      setIsAiTyping(false);
+    }
+  };
+
   React.useEffect(() => {
     // Dynamically load Pyodide
     const script = document.createElement("script");
@@ -173,6 +203,12 @@ export default function LabWorkspace({ initialCodeSnippet, initialTerminalOutput
               )}
               {isExecuting ? 'Running...' : (!isCompilerReady ? 'Loading Compiler...' : 'Run Code')}
             </button>
+            <button 
+              onClick={() => setIsAIOpen(!isAIOpen)}
+              className="ml-4 px-4 py-1.5 rounded text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-2 bg-purple-600 hover:bg-purple-500 text-white shadow-[0_0_15px_rgba(147,51,234,0.4)]"
+            >
+              ✨ Ask AI Tutor
+            </button>
           </div>
           
           <textarea
@@ -182,6 +218,49 @@ export default function LabWorkspace({ initialCodeSnippet, initialTerminalOutput
             spellCheck="false"
           />
         </div>
+
+        {/* AI Tutor Panel */}
+        {isAIOpen && (
+          <div className="w-[350px] flex-shrink-0 glass-panel border-[#333] bg-[#050505] flex flex-col overflow-hidden animate-slide-in-right relative z-20">
+            <div className="bg-[#111] border-b border-[#333] p-3 flex justify-between items-center">
+              <div className="flex items-center gap-2">
+                <span className="text-xl">✨</span>
+                <span className="font-bold text-purple-400 text-sm tracking-widest uppercase">PhD AI Tutor</span>
+              </div>
+              <button onClick={() => setIsAIOpen(false)} className="text-gray-500 hover:text-white">✕</button>
+            </div>
+            
+            <div className="flex-grow p-4 overflow-y-auto custom-scrollbar flex flex-col gap-4 text-sm">
+              {aiChat.map((msg, idx) => (
+                <div key={idx} className={`p-3 rounded-lg ${msg.role === 'assistant' ? 'bg-purple-900/20 border border-purple-500/30 text-purple-100' : 'bg-[#222] border border-[#333] text-gray-200 self-end'}`}>
+                  {msg.content}
+                </div>
+              ))}
+              {isAiTyping && (
+                <div className="p-3 rounded-lg bg-purple-900/20 border border-purple-500/30 text-purple-400 w-16 flex justify-center">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                </div>
+              )}
+            </div>
+
+            <form onSubmit={handleAskAI} className="p-3 bg-[#111] border-t border-[#333] flex gap-2">
+              <input 
+                type="text" 
+                value={aiInput}
+                onChange={(e) => setAiInput(e.target.value)}
+                placeholder="Ask about your code..." 
+                className="flex-grow bg-[#222] border border-[#333] rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500"
+              />
+              <button 
+                type="submit" 
+                disabled={isAiTyping || !aiInput.trim()}
+                className="bg-purple-600 hover:bg-purple-500 disabled:opacity-50 text-white px-3 py-2 rounded transition-colors"
+              >
+                &rarr;
+              </button>
+            </form>
+          </div>
+        )}
       </div>
 
       {/* Terminal */}
