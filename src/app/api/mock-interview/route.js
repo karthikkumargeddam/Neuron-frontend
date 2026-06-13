@@ -1,34 +1,36 @@
 import { NextResponse } from 'next/server';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 export async function POST(request) {
   try {
     const { code, answer } = await request.json();
 
-    // Mock realistic interview responses
-    await new Promise(resolve => setTimeout(resolve, 1200)); 
+    if (!process.env.GEMINI_API_KEY) {
+      return NextResponse.json({ 
+        reply: "My advanced model is disconnected. Please add GEMINI_API_KEY to your environment variables to enable the AI Mock Interviewer!" 
+      });
+    }
 
-    let reply = "";
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    // Use gemini-1.5-pro for complex technical interviewing
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+
+    let prompt = `You are a strict, highly technical senior engineering interviewer conducting a mock interview for a top tech company.\n`;
+    prompt += `Keep your responses to 1-2 short, spoken sentences. Act like you are speaking to the candidate out loud.\n`;
+    
+    if (code) {
+      prompt += `\nHere is the code the candidate just wrote:\n\`\`\`\n${code}\n\`\`\`\n`;
+    }
 
     if (!answer) {
-      // First question based on code context
-      if (code && code.toLowerCase().includes('for')) {
-        reply = "I see you used a for loop in your code. Can you explain the time complexity of your approach, and whether there's a more efficient way to structure it?";
-      } else if (code && code.toLowerCase().includes('quantum')) {
-        reply = "Looking at your quantum simulation, could you explain the significance of the Hadamard gate you applied to the initial qubit state?";
-      } else {
-        reply = "I've reviewed your code. Can you walk me through your overall logic and explain the main bottleneck in your current implementation?";
-      }
+      prompt += `\nThis is the start of the interview. Based on their code, ask them a challenging technical question about their implementation, time complexity, or system design.`;
     } else {
-      // Follow-up based on user answer
-      const a = answer.toLowerCase();
-      if (a.includes('o(n)') || a.includes('linear')) {
-        reply = "That's correct, linear time complexity is solid here. But what if we needed to run this across a massive distributed dataset? How would you modify your approach?";
-      } else if (a.includes('superposition')) {
-        reply = "Exactly, superposition allows the qubit to exist in multiple states. Follow up question: how does entanglement play a role in scaling this simulation?";
-      } else {
-        reply = "Interesting perspective. In a real-world technical interview, I'd want you to dive deeper into memory constraints. Can you think of any edge cases where your code might crash with a large input?";
-      }
+      prompt += `\nThe candidate answered: "${answer}"\n\nEvaluate their answer briefly, then follow up with another related technical question to test their depth of knowledge.`;
     }
+
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const reply = response.text();
 
     return NextResponse.json({ reply });
   } catch (err) {

@@ -1,39 +1,40 @@
 import { NextResponse } from 'next/server';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 export async function POST(request) {
   try {
     const { code, language, error, question } = await request.json();
 
-    // In a production environment with an API key, you would call OpenAI here:
-    /*
-    import OpenAI from 'openai';
-    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-    const completion = await openai.chat.completions.create({
-      messages: [{ role: 'system', content: 'You are an expert programming tutor.' }, ...],
-      model: 'gpt-4-turbo',
-    });
-    return NextResponse.json({ reply: completion.choices[0].message.content });
-    */
+    // Check if API key exists
+    if (!process.env.GEMINI_API_KEY) {
+      console.warn("GEMINI_API_KEY is missing. Using fallback mocked response.");
+      return NextResponse.json({ 
+        reply: "I am currently in Offline/Mock mode because the GEMINI_API_KEY environment variable is not set. Please add it to your .env.local file to activate my advanced AI capabilities!" 
+      });
+    }
 
-    // For demonstration, we provide highly realistic mocked responses based on context.
-    await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate network latency
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    // Use gemini-1.5-flash for fast chat responses
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    let reply = "";
+    let prompt = `You are an expert PhD-level AI programming tutor named 'NeuronLabs Tutor'.\n`;
+    prompt += `The user is writing code in ${language || 'Python'}.\n`;
+    
+    if (code) {
+      prompt += `\nHere is their current code:\n\`\`\`${language}\n${code}\n\`\`\`\n`;
+    }
 
     if (error) {
-      reply = `I noticed you're encountering an error in your ${language} code:\n\n\`\`\`\n${error}\n\`\`\`\n\nThis usually means there is a syntax issue or an undefined variable nearby. Could you check the line where the error occurred? Remember that in ${language}, strict typing or missing semicolons can often trigger this.`;
+      prompt += `\nThey just encountered this error:\n${error}\n\nPlease help them fix it. Be concise, encouraging, and provide the exact fix.`;
     } else if (question) {
-      const q = question.toLowerCase();
-      if (q.includes("loop") || q.includes("for") || q.includes("while")) {
-        reply = `Loops are essential for iteration! In ${language}, you can use a \`for\` loop to iterate over arrays, or a \`while\` loop if you're waiting for a specific condition to become false. Would you like an example?`;
-      } else if (q.includes("function") || q.includes("def")) {
-        reply = `Functions help keep your code modular. In ${language}, you declare a function to encapsulate reusable logic. Make sure to return a value if you need to use the result elsewhere!`;
-      } else {
-        reply = `That's a great question about ${language}! Based on your current code snippet, I'd recommend reviewing the official documentation or breaking the problem down into smaller, testable chunks. What specific part is confusing you?`;
-      }
+      prompt += `\nThe user asks: "${question}"\n\nPlease answer their question accurately and concisely. Focus on the code they provided if relevant.`;
     } else {
-      reply = `Hello! I'm your NeuronLabs AI Tutor. I'm currently analyzing your ${language} code. How can I help you today?`;
+      prompt += `\nPlease greet them and ask how you can help them with their code today.`;
     }
+
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const reply = response.text();
 
     return NextResponse.json({ reply });
   } catch (err) {
