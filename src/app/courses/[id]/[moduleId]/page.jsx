@@ -9,7 +9,7 @@ async function getCourseData(uuid) {
     const response = await fetchAPI('/api/courses', {
       filters: { uuid: { $eq: uuid } },
       populate: '*'
-    }, { cache: 'no-store' });
+    }, { next: { revalidate: 60 } });
     
     if (response?.data?.length > 0) {
       const course = response.data[0];

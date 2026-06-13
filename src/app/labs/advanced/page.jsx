@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { fetchAPI } from '../../../lib/api';
 
 export default async function AdvancedLabsPage() {
-  const response = await fetchAPI('/api/labs', { populate: '*', pagination: { limit: 200 } }, { cache: 'no-store' });
+  const response = await fetchAPI('/api/labs', { populate: '*', pagination: { limit: 200 } }, { next: { revalidate: 60 } });
   const backendLabs = response?.data || [];
   
   const advancedLabsFromBackend = backendLabs.filter(lab => {

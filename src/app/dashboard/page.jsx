@@ -31,7 +31,7 @@ export default async function DashboardPage() {
       headers: {
         Authorization: `Bearer ${session.jwt}`,
       },
-      cache: 'no-store'
+      next: { revalidate: 60 }
     });
     if (res.ok) {
       freshUser = await res.json();

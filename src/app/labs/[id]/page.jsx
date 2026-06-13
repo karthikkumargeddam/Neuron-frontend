@@ -11,7 +11,7 @@ async function getLabData(uuid) {
     const response = await fetchAPI('/api/labs', {
       filters: { uuid: { $eq: uuid } },
       populate: '*'
-    }, { cache: 'no-store' });
+    }, { next: { revalidate: 60 } });
     
     if (response?.data?.length > 0) {
       const lab = response.data[0];
