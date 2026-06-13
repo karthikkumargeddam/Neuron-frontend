@@ -1,5 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+
+export const dynamic = 'force-dynamic';
 import Providers from "../components/Providers";
 import GlobalNav from "../components/GlobalNav";
 import Footer from "../components/Footer";

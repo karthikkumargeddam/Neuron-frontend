@@ -27,7 +27,6 @@ export default async function DashboardPage() {
   // Fetch fresh user data from Strapi to bypass stale session cookies
   let freshUser = {};
   try {
-    if (process.env.VERCEL) {
       setLoading(false);
       return;
     }
