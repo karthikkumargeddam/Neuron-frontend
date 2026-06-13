@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Mermaid from "./Mermaid";
-import { Loader2 } from "lucide-react";
+import { Loader2, Users } from "lucide-react";
 import ThreeDViewer from "./ThreeDViewer";
+import { io } from "socket.io-client";
 
 export default function LabWorkspace({ initialCodeSnippet, initialTerminalOutput, visualization }) {
   const formatText = (text) => text ? text.replace(/\\n/g, '\n') : "";
@@ -15,6 +16,49 @@ export default function LabWorkspace({ initialCodeSnippet, initialTerminalOutput
   const [isExecuting, setIsExecuting] = useState(false);
   const [isCompilerReady, setIsCompilerReady] = useState(false);
   const [pyodideInstance, setPyodideInstance] = useState(null);
+
+  // Multiplayer Collaboration
+  const [socket, setSocket] = useState(null);
+  const [liveUsers, setLiveUsers] = useState(1);
+  const [isSyncing, setIsSyncing] = useState(false);
+
+  useEffect(() => {
+    // Determine the lab ID from the URL path
+    const labId = window.location.pathname.split('/').pop() || 'default-lab';
+    
+    // Connect to Strapi WebSocket Server
+    const backendUrl = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337';
+    const newSocket = io(backendUrl);
+
+    newSocket.on("connect", () => {
+      newSocket.emit("join-lab", labId);
+    });
+
+    newSocket.on("user-joined", () => {
+      setLiveUsers(prev => prev + 1);
+    });
+
+    newSocket.on("code-update", (newCode) => {
+      setIsSyncing(true);
+      setCode(newCode);
+      // Wait a moment to avoid emitting our own update back
+      setTimeout(() => setIsSyncing(false), 100);
+    });
+
+    setSocket(newSocket);
+
+    return () => newSocket.disconnect();
+  }, []);
+
+  const handleCodeChange = (e) => {
+    const newCode = e.target.value;
+    setCode(newCode);
+    
+    if (socket && !isSyncing) {
+      const labId = window.location.pathname.split('/').pop() || 'default-lab';
+      socket.emit("code-change", { labId, code: newCode });
+    }
+  };
 
   const getThreeDType = () => {
     const lowerCode = code.toLowerCase();
@@ -223,33 +267,43 @@ export default function LabWorkspace({ initialCodeSnippet, initialTerminalOutput
         {/* Code Editor */}
         <div className={`flex-1 w-full glass-panel border-[#333] p-6 font-mono text-sm bg-[#050505] relative flex flex-col overflow-hidden`}>
           <div className="flex justify-between items-center mb-4 flex-shrink-0">
-            <div className="bg-[#222] px-3 py-1 text-xs text-gray-500 rounded">Interactive Editor</div>
-            <button 
-              onClick={handleRunCode}
-              disabled={isExecuting || !isCompilerReady}
-              className={`px-4 py-1.5 rounded text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-2 ${
-                (isExecuting || !isCompilerReady)
-                  ? "bg-gray-600 text-gray-400 cursor-not-allowed" 
-                  : "bg-green-600 hover:bg-green-500 text-white shadow-[0_0_15px_rgba(22,163,74,0.4)]"
-              }`}
-            >
-              {(isExecuting || !isCompilerReady) && (
-                <Loader2 className="w-4 h-4 animate-spin" />
+            <div className="flex items-center gap-3">
+              <div className="bg-[#222] px-3 py-1 text-xs text-gray-500 rounded">Interactive Editor</div>
+              {liveUsers > 1 && (
+                <div className="bg-green-900/30 border border-green-500/30 text-green-400 px-3 py-1 rounded text-xs flex items-center gap-2 animate-pulse">
+                  <Users className="w-3 h-3" />
+                  {liveUsers} Researchers Live
+                </div>
               )}
-              {isExecuting ? 'Running...' : (!isCompilerReady ? 'Loading Compiler...' : 'Run Code')}
-            </button>
-            <button 
-              onClick={() => setIsAIOpen(!isAIOpen)}
-              className="ml-4 px-4 py-1.5 rounded text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-2 bg-purple-600 hover:bg-purple-500 text-white shadow-[0_0_15px_rgba(147,51,234,0.4)]"
-            >
-              ✨ Ask AI Tutor
-            </button>
+            </div>
+            <div className="flex gap-4">
+              <button 
+                onClick={handleRunCode}
+                disabled={isExecuting || !isCompilerReady}
+                className={`px-4 py-1.5 rounded text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-2 ${
+                  (isExecuting || !isCompilerReady)
+                    ? "bg-gray-600 text-gray-400 cursor-not-allowed" 
+                    : "bg-green-600 hover:bg-green-500 text-white shadow-[0_0_15px_rgba(22,163,74,0.4)]"
+                }`}
+              >
+                {(isExecuting || !isCompilerReady) && (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                )}
+                {isExecuting ? 'Running...' : (!isCompilerReady ? 'Loading Compiler...' : 'Run Code')}
+              </button>
+              <button 
+                onClick={() => setIsAIOpen(!isAIOpen)}
+                className="px-4 py-1.5 rounded text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-2 bg-purple-600 hover:bg-purple-500 text-white shadow-[0_0_15px_rgba(147,51,234,0.4)]"
+              >
+                ✨ Ask AI Tutor
+              </button>
+            </div>
           </div>
           
           <textarea
             value={code}
-            onChange={(e) => setCode(e.target.value)}
-            className="w-full flex-grow bg-transparent text-gray-300 resize-none outline-none whitespace-pre overflow-y-auto custom-scrollbar"
+            onChange={handleCodeChange}
+            className="w-full flex-grow bg-transparent text-gray-300 resize-none outline-none whitespace-pre overflow-y-auto custom-scrollbar relative z-10"
             spellCheck="false"
           />
         </div>
