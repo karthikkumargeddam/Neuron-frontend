@@ -233,7 +233,7 @@ export default async function Home() {
         </h1>
         
         <p className="text-gray-400 text-xl md:text-2xl max-w-3xl mb-12 font-medium animate-fade-in" style={{ animationDelay: '0.2s' }}>
-          Instantly spin up GPU-accelerated sandboxes. Dive into our exclusive M.Tech & PhD environments directly from your browser.
+          Instantly spin up GPU-accelerated sandboxes, experience interactive 3D WebGL simulations, and ace your placements with AI Voice Mock Interviews.
         </p>
 
         <div className="flex items-center gap-6 mb-12 animate-fade-in" style={{ animationDelay: '0.25s' }}>
@@ -260,28 +260,28 @@ export default async function Home() {
         {/* Feature Highlights Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-40 w-full max-w-7xl px-6 md:px-12 animate-fade-in" style={{ animationDelay: '0.5s' }}>
           <div className="glass-panel p-10 text-left hover:-translate-y-2 transition-transform duration-500 rounded-3xl border border-gray-800/80 bg-gradient-to-br from-[#111] to-[#0a0a0a]">
-            <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center mb-8 border border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.1)]">
-              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            <div className="w-14 h-14 rounded-2xl bg-red-500/10 text-red-400 flex items-center justify-center mb-8 border border-red-500/20 shadow-[0_0_15px_rgba(220,38,38,0.1)]">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
             </div>
-            <h3 className="text-2xl font-bold mb-4 text-white">Isolated Virtual Boxes</h3>
-            <p className="text-gray-400 text-[1.05rem] leading-relaxed">Dedicated Linux instances running in perfect isolation. Install dependencies, run root commands, and break things safely.</p>
+            <h3 className="text-2xl font-bold mb-4 text-white">AI Voice Mock Interviews</h3>
+            <p className="text-gray-400 text-[1.05rem] leading-relaxed">Ace your placements. Our AI acts as a technical recruiter, dynamically listening to your microphone and verbally grilling you on your code.</p>
           </div>
           
           <div className="glass-panel p-10 text-left hover:-translate-y-2 transition-transform duration-500 rounded-3xl border border-indigo-500/30 bg-gradient-to-br from-indigo-500/5 to-[#0a0a0a] relative overflow-hidden">
             <div className="absolute top-0 right-0 w-40 h-40 bg-indigo-500 mix-blend-overlay filter blur-[80px] opacity-30"></div>
             <div className="w-14 h-14 rounded-2xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center mb-8 border border-indigo-500/30 shadow-[0_0_15px_rgba(99,102,241,0.2)]">
-              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
             </div>
-            <h3 className="text-2xl font-bold mb-4 text-white">GPU-Accelerated Sandboxes</h3>
-            <p className="text-gray-400 text-[1.05rem] leading-relaxed">Instantly attach NVIDIA V100/A100 GPUs to your sandbox. Train massive transformer models without leaving your browser window.</p>
+            <h3 className="text-2xl font-bold mb-4 text-white">Interactive 3D WebGL Labs</h3>
+            <p className="text-gray-400 text-[1.05rem] leading-relaxed">Experience immersive education. Render complex Quantum Physics models and Molecular Biological structures dynamically in real-time 3D.</p>
           </div>
 
           <div className="glass-panel p-10 text-left hover:-translate-y-2 transition-transform duration-500 rounded-3xl border border-gray-800/80 bg-gradient-to-br from-[#111] to-[#0a0a0a]">
-            <div className="w-14 h-14 rounded-2xl bg-purple-500/10 text-purple-400 flex items-center justify-center mb-8 border border-purple-500/20 shadow-[0_0_15px_rgba(168,85,247,0.1)]">
-              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <div className="w-14 h-14 rounded-2xl bg-green-500/10 text-green-400 flex items-center justify-center mb-8 border border-green-500/20 shadow-[0_0_15px_rgba(34,197,94,0.1)]">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             </div>
-            <h3 className="text-2xl font-bold mb-4 text-white">Zero-Setup Environments</h3>
-            <p className="text-gray-400 text-[1.05rem] leading-relaxed">Skip the Dockerfiles and Conda environments. One click boots up pre-configured environments for PyTorch, TensorFlow, and more.</p>
+            <h3 className="text-2xl font-bold mb-4 text-white">Live Multiplayer Syncing</h3>
+            <p className="text-gray-400 text-[1.05rem] leading-relaxed">Don't code alone. Invite your peers or tutors to your virtual lab and collaborate simultaneously with real-time Google Docs style syncing.</p>
           </div>
         </div>
 
