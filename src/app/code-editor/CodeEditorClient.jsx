@@ -332,8 +332,8 @@ export default function CodeEditorClient() {
         </div>
 
         {/* Editor Area */}
-        <div className="flex-1 relative flex">
-          <div className="flex-1 relative min-h-0">
+        <div className="flex-1 relative flex overflow-hidden">
+          <div className="flex-1 relative min-h-0 min-w-0">
             <Editor
               height="100%"
               language={language}
@@ -359,7 +359,7 @@ export default function CodeEditorClient() {
 
           {/* AI Chat Pane */}
           {isAIOpen && (
-            <div className="w-80 border-l border-gray-800 bg-[#0c0c0c] flex flex-col shrink-0 animate-in slide-in-from-right-8 duration-200">
+            <div className="w-80 border-l border-gray-800 bg-[#0c0c0c] flex flex-col shrink-0 animate-fade-in">
               <div className="p-3 border-b border-gray-800 bg-[#111] flex items-center justify-between">
                 <div className="flex items-center gap-2 text-fuchsia-400 font-bold">
                   <Bot className="w-5 h-5" />
