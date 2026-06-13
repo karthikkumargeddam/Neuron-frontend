@@ -52,9 +52,9 @@ export default async function AdvancedLabsPage() {
   const labsToDisplay = advancedLabsFromBackend.length > 0 ? advancedLabsFromBackend.map(lab => {
     const attrs = lab.attributes || lab;
     return {
-      id: attrs.uuid || lab.id,
+      id: lab.documentId || attrs.uuid || lab.id,
       title: attrs.title,
-      level: attrs.level || 'Post-Doctoral',
+      level: attrs.level || 'PhD',
       description: attrs.description,
       status: 'Online',
     };
