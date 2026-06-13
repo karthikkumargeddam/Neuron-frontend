@@ -2,9 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import Mermaid from "./Mermaid";
-import { Loader2, Users } from "lucide-react";
+import { Loader2, Users, Mic, Activity } from "lucide-react";
 import ThreeDViewer from "./ThreeDViewer";
 import { io } from "socket.io-client";
+import MockInterviewModal from "./MockInterviewModal";
 
 export default function LabWorkspace({ initialCodeSnippet, initialTerminalOutput, visualization }) {
   const formatText = (text) => text ? text.replace(/\\n/g, '\n') : "";
@@ -77,6 +78,30 @@ export default function LabWorkspace({ initialCodeSnippet, initialTerminalOutput
   const [aiChat, setAiChat] = useState([{ role: 'assistant', content: "Hello! I'm your NeuronLabs PhD AI Tutor. I can see your Python code. How can I assist your research today?" }]);
   const [aiInput, setAiInput] = useState("");
   const [isAiTyping, setIsAiTyping] = useState(false);
+  
+  // Mock Interview State
+  const [isInterviewOpen, setIsInterviewOpen] = useState(false);
+
+  // Profiler State
+  const [isProfiling, setIsProfiling] = useState(false);
+  const [profilerData, setProfilerData] = useState(null);
+
+  const handleProfileCode = async () => {
+    setIsProfiling(true);
+    try {
+      const res = await fetch('/api/code-profiler', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code })
+      });
+      const data = await res.json();
+      setProfilerData(data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsProfiling(false);
+    }
+  };
 
   const handleAskAI = async (e) => {
     e?.preventDefault();
@@ -278,6 +303,14 @@ export default function LabWorkspace({ initialCodeSnippet, initialTerminalOutput
             </div>
             <div className="flex gap-4">
               <button 
+                onClick={handleProfileCode}
+                disabled={isProfiling}
+                className="px-4 py-1.5 rounded text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-2 bg-[#222] hover:bg-[#333] border border-[#444] text-cyan-400"
+              >
+                {isProfiling ? <Loader2 className="w-4 h-4 animate-spin" /> : <Activity className="w-4 h-4" />}
+                Profile Code
+              </button>
+              <button 
                 onClick={handleRunCode}
                 disabled={isExecuting || !isCompilerReady}
                 className={`px-4 py-1.5 rounded text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-2 ${
@@ -297,6 +330,12 @@ export default function LabWorkspace({ initialCodeSnippet, initialTerminalOutput
               >
                 ✨ Ask AI Tutor
               </button>
+              <button 
+                onClick={() => setIsInterviewOpen(true)}
+                className="px-4 py-1.5 rounded text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-2 bg-red-600 hover:bg-red-500 text-white shadow-[0_0_15px_rgba(220,38,38,0.4)]"
+              >
+                <Mic className="w-4 h-4" /> Mock Interview
+              </button>
             </div>
           </div>
           
@@ -306,6 +345,32 @@ export default function LabWorkspace({ initialCodeSnippet, initialTerminalOutput
             className="w-full flex-grow bg-transparent text-gray-300 resize-none outline-none whitespace-pre overflow-y-auto custom-scrollbar relative z-10"
             spellCheck="false"
           />
+
+          {/* Profiler Overlay */}
+          {profilerData && (
+            <div className="absolute bottom-6 right-6 w-[400px] bg-[#050505] border border-cyan-500/30 rounded-lg p-4 shadow-2xl z-20 animate-fade-in flex flex-col gap-3">
+              <div className="flex justify-between items-center border-b border-[#333] pb-2">
+                <div className="flex items-center gap-2 text-cyan-400">
+                  <Activity className="w-4 h-4" />
+                  <span className="font-bold text-xs uppercase tracking-widest">Big-O Analyzer</span>
+                </div>
+                <button onClick={() => setProfilerData(null)} className="text-gray-500 hover:text-white">✕</button>
+              </div>
+              <div className="flex justify-between items-center">
+                <div className="bg-[#111] p-3 rounded border border-[#333] w-[48%] text-center">
+                  <p className="text-xs text-gray-500 uppercase mb-1">Time</p>
+                  <p className="text-xl font-bold text-white font-mono">{profilerData.timeComplexity}</p>
+                </div>
+                <div className="bg-[#111] p-3 rounded border border-[#333] w-[48%] text-center">
+                  <p className="text-xs text-gray-500 uppercase mb-1">Space</p>
+                  <p className="text-xl font-bold text-white font-mono">{profilerData.spaceComplexity}</p>
+                </div>
+              </div>
+              <p className="text-sm text-gray-400 leading-relaxed bg-cyan-900/10 p-3 rounded border border-cyan-500/20">
+                {profilerData.explanation}
+              </p>
+            </div>
+          )}
         </div>
 
         {/* AI Tutor Panel */}
@@ -366,6 +431,12 @@ export default function LabWorkspace({ initialCodeSnippet, initialTerminalOutput
           </div>
         )}
       </div>
+
+      <MockInterviewModal 
+        isOpen={isInterviewOpen} 
+        onClose={() => setIsInterviewOpen(false)} 
+        code={code} 
+      />
     </div>
   );
 }
