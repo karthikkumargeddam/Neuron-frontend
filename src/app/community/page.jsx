@@ -4,6 +4,7 @@ import GlobalNav from "@/components/GlobalNav";
 
 async function getShowcases() {
   try {
+    if (process.env.VERCEL) return [];
     const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://127.0.0.1:1337'}/api/showcases`, { cache: 'no-store' });
     const json = await res.json();
     return json.data || [];

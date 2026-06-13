@@ -2,12 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { Play, RotateCcw, Plus, Save, Trash2, Cpu, Zap, Beaker } from "lucide-react";
-import Editor, { loader } from "@monaco-editor/react";
-import * as monaco from 'monaco-editor';
-
-if (typeof window !== 'undefined') {
-  loader.config({ monaco });
-}
+import Editor from "@monaco-editor/react";
 
 export default function JupyterWorkspace({ code, setCode }) {
   const [cells, setCells] = useState([

@@ -3,6 +3,7 @@ import PlaygroundClient from './PlaygroundClient';
 
 async function getModels() {
   try {
+    if (process.env.VERCEL) return [];
     const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://127.0.0.1:1337'}/api/models`, { cache: 'no-store' });
     const json = await res.json();
     return json.data || [];
