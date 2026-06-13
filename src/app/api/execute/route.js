@@ -8,41 +8,67 @@ export async function POST(request) {
       return NextResponse.json({ error: "No code provided" }, { status: 400 });
     }
 
-    // Map language identifiers to Piston equivalents if needed
-    let pistonLang = language;
-    if (language === 'cpp') pistonLang = 'c++';
+    // Map language identifiers to Judge0 language IDs
+    const languageMap = {
+      'javascript': 102, // Node.js 22
+      'python': 109,     // Python 3.13
+      'java': 91,        // Java 17
+      'c': 103,          // C GCC 14
+      'cpp': 105,        // C++ GCC 14
+      'go': 107,         // Go 1.23
+      'rust': 108,       // Rust 1.85
+      'ruby': 72,        // Ruby 2.7
+      'php': 98,         // PHP 8.3
+      'csharp': 51,      // C# Mono
+      'swift': 83        // Swift 5.2
+    };
 
-    // Call Piston API for secure remote code execution
-    const pistonRes = await fetch('https://emkc.org/api/v2/piston/execute', {
+    const languageId = languageMap[language.toLowerCase()];
+
+    if (!languageId) {
+      return NextResponse.json({ error: `Language '${language}' is not supported yet.` }, { status: 400 });
+    }
+
+    // Call Judge0 public free tier API for secure remote code execution
+    const judge0Res = await fetch('https://ce.judge0.com/submissions?base64_encoded=false&wait=true', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        language: pistonLang,
-        version: '*',
-        files: [{ content: code }]
+        source_code: code,
+        language_id: languageId
       })
     });
 
-    if (!pistonRes.ok) {
-      const errorText = await pistonRes.text();
+    if (!judge0Res.ok) {
+      const errorText = await judge0Res.text();
       return NextResponse.json({ error: `Execution engine error: ${errorText}` }, { status: 500 });
     }
 
-    const data = await pistonRes.json();
+    const data = await judge0Res.json();
     
-    // Check if compilation failed
-    if (data.compile && data.compile.code !== 0) {
-      return NextResponse.json({ output: '', error: data.compile.stderr || data.compile.output });
+    // Check for compilation errors
+    if (data.compile_output) {
+      return NextResponse.json({ output: '', error: data.compile_output });
     }
 
-    // Return runtime output
-    if (data.run) {
-      return NextResponse.json({ output: data.run.stdout || '', error: data.run.stderr || '' });
+    // Check for runtime errors
+    if (data.stderr) {
+      return NextResponse.json({ output: data.stdout || '', error: data.stderr });
     }
 
-    return NextResponse.json({ error: "Unknown execution error" }, { status: 500 });
+    // Return successful execution
+    if (data.stdout !== null && data.stdout !== undefined) {
+      return NextResponse.json({ output: data.stdout, error: '' });
+    }
+
+    // Fallback if status code implies an error but no stderr/compile_output provided (e.g. timeout)
+    if (data.status && data.status.id > 3) {
+      return NextResponse.json({ output: data.stdout || '', error: `Execution failed: ${data.status.description}` });
+    }
+
+    return NextResponse.json({ output: '', error: "Program executed silently with no output" });
 
   } catch (err) {
     console.error("Execution error:", err);
