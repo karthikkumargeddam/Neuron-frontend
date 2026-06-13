@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Mermaid from "./Mermaid";
 import { Loader2 } from "lucide-react";
+import ThreeDViewer from "./ThreeDViewer";
 
 export default function LabWorkspace({ initialCodeSnippet, initialTerminalOutput, visualization }) {
   const formatText = (text) => text ? text.replace(/\\n/g, '\n') : "";
@@ -14,6 +15,18 @@ export default function LabWorkspace({ initialCodeSnippet, initialTerminalOutput
   const [isExecuting, setIsExecuting] = useState(false);
   const [isCompilerReady, setIsCompilerReady] = useState(false);
   const [pyodideInstance, setPyodideInstance] = useState(null);
+
+  const getThreeDType = () => {
+    const lowerCode = code.toLowerCase();
+    if (lowerCode.includes('quantum') || lowerCode.includes('qiskit') || lowerCode.includes('qubit')) return 'quantum_sphere';
+    if (lowerCode.includes('protein') || lowerCode.includes('molecule') || lowerCode.includes('dna') || lowerCode.includes('biology')) return 'molecule';
+    if (lowerCode.includes('astro') || lowerCode.includes('space') || lowerCode.includes('blackhole')) return 'astrophysics';
+    return null;
+  };
+
+  const [force3D, setForce3D] = useState(false);
+  const autoThreeDType = getThreeDType();
+  const shouldRender3D = force3D || (!plotImage && !videoSrc && autoThreeDType);
 
   // AI Tutor State
   const [isAIOpen, setIsAIOpen] = useState(false);
@@ -152,11 +165,11 @@ export default function LabWorkspace({ initialCodeSnippet, initialTerminalOutput
       <div className="flex-grow flex flex-col lg:flex-row gap-4 overflow-hidden">
         
         {/* Dynamic Visualization */}
-        {(visualization || plotImage || videoSrc) && (
+        {(visualization || plotImage || videoSrc || shouldRender3D) && (
            <div className="flex-1 flex flex-col relative glass-panel border-[#333] bg-[#050505] p-2 overflow-y-auto custom-scrollbar">
              <div className="absolute top-4 left-4 bg-[#111] px-2 py-1 text-xs font-mono text-cyan-500 z-10 border border-cyan-500/30 rounded flex items-center gap-4">
-               <span>{videoSrc ? "Video Simulation" : plotImage ? "Python Matplotlib Output" : "Architecture Overview"}</span>
-               {videoSrc && (
+               <span>{shouldRender3D ? "WebGL 3D Simulation" : videoSrc ? "Video Simulation" : plotImage ? "Python Matplotlib Output" : "Architecture Overview"}</span>
+               {videoSrc && !shouldRender3D && (
                  <button 
                    onClick={toggleVideoPlayback}
                    className="hover:text-cyan-300 transition-colors bg-[#222] px-2 rounded"
@@ -165,8 +178,30 @@ export default function LabWorkspace({ initialCodeSnippet, initialTerminalOutput
                  </button>
                )}
              </div>
-             <div className="flex-grow flex items-center justify-center p-8 mt-6 w-full relative">
-               {ytEmbedUrl ? (
+             <div className="absolute top-4 right-4 z-10">
+               {autoThreeDType && !shouldRender3D && !force3D && (
+                 <button 
+                   onClick={() => setForce3D(true)}
+                   className="bg-cyan-600/20 hover:bg-cyan-600/40 text-cyan-400 border border-cyan-500/30 px-3 py-1 rounded text-xs transition-colors"
+                 >
+                   View 3D Simulation
+                 </button>
+               )}
+               {force3D && (
+                 <button 
+                   onClick={() => setForce3D(false)}
+                   className="bg-[#222] hover:bg-[#333] text-gray-400 border border-[#444] px-3 py-1 rounded text-xs transition-colors"
+                 >
+                   Show 2D Output
+                 </button>
+               )}
+             </div>
+             <div className={`flex-grow flex items-center justify-center mt-6 w-full relative ${shouldRender3D ? 'p-0' : 'p-8'}`}>
+               {shouldRender3D ? (
+                 <div className="w-full h-full min-h-[400px] rounded border border-[#333] overflow-hidden">
+                   <ThreeDViewer type={autoThreeDType || 'quantum_sphere'} />
+                 </div>
+               ) : ytEmbedUrl ? (
                  <iframe 
                    ref={iframeRef}
                    src={ytEmbedUrl} 
