@@ -6,13 +6,14 @@ import { useSession, signOut } from "next-auth/react";
 import { Search } from "lucide-react";
 import CommandPalette from "./CommandPalette";
 import NotificationBell from "./NotificationBell";
+import ThemeToggle from "./ThemeToggle";
 
 export default function GlobalNav() {
   const pathname = usePathname();
   const { data: session } = useSession();
 
   return (
-    <header className="fixed top-0 left-0 w-full z-[100] bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-gray-800/60 flex flex-col shadow-xl">
+    <header className="fixed top-0 left-0 w-full z-[100] bg-card-bg/80 backdrop-blur-xl border-b border-card-border flex flex-col shadow-xl">
       <div className="px-8 py-3 flex items-center justify-between">
         {/* Left side: Home / Brand */}
         <div>
@@ -82,20 +83,25 @@ export default function GlobalNav() {
               )}
             </div>
           )}
+          
+          {/* Theme Toggle is available to all users */}
+          <div className="ml-4 pl-4 border-l border-card-border flex items-center">
+            <ThemeToggle />
+          </div>
         </div>
       </div>
 
       {/* Bottom row: Navigation Links */}
-      <div className="w-full border-t border-gray-800/40 bg-[#050505]/50">
+      <div className="w-full border-t border-card-border bg-background/50">
         <div className="px-8 py-3 overflow-x-auto hide-scrollbar flex justify-center">
           <nav className="flex gap-4 md:gap-6 lg:gap-8 text-sm font-semibold tracking-wide items-center whitespace-nowrap">
-            <Link href="/courses" className="text-gray-300 hover:text-cyan-400 transition-colors">Courses</Link>
-            <Link href="/datasets" className="text-gray-300 hover:text-cyan-400 transition-colors">Datasets</Link>
-            <Link href="/playground" className="text-gray-300 hover:text-rose-400 transition-colors">Playground</Link>
-            <Link href="/code-editor" className="text-gray-300 hover:text-purple-400 transition-colors">Code Editor</Link>
-            <Link href="/labs" className="text-gray-300 hover:text-fuchsia-400 transition-colors">Labs</Link>
-            <Link href="/sandbox" className="text-gray-300 hover:text-emerald-400 transition-colors">Sandbox</Link>
-            <Link href="/virtual-box" className="text-gray-300 hover:text-blue-400 transition-colors">Virtual Box</Link>
+            <Link href="/courses" className="text-gray-600 dark:text-gray-300 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors">Courses</Link>
+            <Link href="/datasets" className="text-gray-600 dark:text-gray-300 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors">Datasets</Link>
+            <Link href="/playground" className="text-gray-600 dark:text-gray-300 hover:text-rose-500 dark:hover:text-rose-400 transition-colors">Playground</Link>
+            <Link href="/code-editor" className="text-gray-600 dark:text-gray-300 hover:text-purple-500 dark:hover:text-purple-400 transition-colors">Code Editor</Link>
+            <Link href="/labs" className="text-gray-600 dark:text-gray-300 hover:text-fuchsia-500 dark:hover:text-fuchsia-400 transition-colors">Labs</Link>
+            <Link href="/sandbox" className="text-gray-600 dark:text-gray-300 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors">Sandbox</Link>
+            <Link href="/virtual-box" className="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors">Virtual Box</Link>
             <Link href="/builder" className="text-cyan-400 hover:text-cyan-300 transition-colors flex items-center gap-1">
               Builder <span className="relative flex h-2 w-2 ml-1"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span><span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span></span>
             </Link>
@@ -103,8 +109,8 @@ export default function GlobalNav() {
             <Link href="/arena" className="text-orange-400 hover:text-orange-300 transition-colors flex items-center gap-1">
               Arena
             </Link>
-            <Link href="/leaderboard" className="text-amber-400 hover:text-amber-300 transition-colors">Leaderboard</Link>
-            <Link href="/careers" className="text-purple-400 hover:text-purple-300 transition-colors">Careers</Link>
+            <Link href="/leaderboard" className="text-amber-500 dark:text-amber-400 hover:text-amber-400 transition-colors">Leaderboard</Link>
+            <Link href="/careers" className="text-purple-500 dark:text-purple-400 hover:text-purple-400 transition-colors">Careers</Link>
           </nav>
         </div>
       </div>
