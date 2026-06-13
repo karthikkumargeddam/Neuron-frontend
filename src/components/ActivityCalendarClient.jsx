@@ -1,6 +1,6 @@
 "use client";
 
-import ActivityCalendar from 'react-activity-calendar';
+import { ActivityCalendar } from 'react-activity-calendar';
 import { useMemo } from 'react';
 
 export default function ActivityCalendarClient() {
