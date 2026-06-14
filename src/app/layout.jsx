@@ -19,6 +19,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://neuronlabs.online"),
   title: "NeuronLabs | Zero-Setup Virtual Sandboxes for Tech Education",
   description: "Accelerate your tech career with interactive 3D WebGL labs, GPU-accelerated virtual boxes, and AI-powered technical mock interviews.",
   keywords: ["Virtual Labs", "Coding Sandbox", "AI Mock Interviews", "GPU Cloud", "Tech Education", "Learn to Code"],
@@ -26,7 +27,7 @@ export const metadata = {
   openGraph: {
     title: "NeuronLabs | Zero-Setup Virtual Sandboxes",
     description: "Code, train, and deploy instantly in zero-setup virtual boxes. Enhance your tech skills with live multiplayer syncing.",
-    url: "https://neuronlabs.app",
+    url: "https://neuronlabs.online",
     siteName: "NeuronLabs",
     images: [
       {
