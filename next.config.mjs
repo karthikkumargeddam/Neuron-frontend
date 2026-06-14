@@ -19,6 +19,7 @@ const nextConfig = {
       { protocol: 'https', hostname: 'wise-action-3f2ccfecaa.strapiapp.com' },
     ],
   },
+  turbopack: {},
 };
 
 export default withPWA(nextConfig);
