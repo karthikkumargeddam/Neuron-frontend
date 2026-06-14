@@ -24,7 +24,11 @@ export default function CourseDiscussions({ courseId }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [courseId]);
+
+  useEffect(() => {
+    fetchComments();
+  }, [courseId, fetchComments]);
 
   const handlePostComment = async (e) => {
     e.preventDefault();

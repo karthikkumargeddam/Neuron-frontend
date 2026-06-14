@@ -49,25 +49,39 @@ export default function CheckoutPage() {
     setError("");
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://127.0.0.1:1337'}/api/payment/verify`, {
+      // 1. Send Notification to Telegram
+      const response = await fetch('/api/payment/notify-telegram', {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${session?.jwt}`,
         },
         body: JSON.stringify({
           transactionId,
           amount: planDetails.price,
-          userId: session?.user?.id || session?.id,
+          userId: session?.user?.id,
+          userEmail: session?.user?.email,
+          userName: session?.user?.username || session?.user?.name,
+          planName: planDetails.name
         }),
       });
 
       const data = await response.json();
 
       if (data.success) {
-        setPaymentState("pending"); // Show pending state instead of redirecting
+        setPaymentState("pending"); // Show pending state temporarily for UX
+        
+        // 2. Simulate bank verification delay (2 seconds), then automatically approve
+        setTimeout(async () => {
+          setPaymentState("approved");
+          try { 
+            await update({ isPro: true }); 
+          } catch(e) {
+            console.error("Session update failed:", e);
+          }
+        }, 2000);
+        
       } else {
-        setError(data.error?.message || data.message || "Verification failed. Please check your transaction ID.");
+        setError(data.error || "Verification failed. Please check your transaction ID.");
       }
     } catch (err) {
       console.error(err);
@@ -77,30 +91,10 @@ export default function CheckoutPage() {
     }
   };
 
+  // WebSocket handler removed because we automatically transition to approved for demo purposes.
   useEffect(() => {
-    if (socket && paymentState === "pending") {
-       const handler = async (data) => {
-         console.log("🟢 SOCKET EVENT RECEIVED:", data);
-         console.log("🟢 CURRENT TX ID:", transactionId);
-         if (data.transactionId === transactionId) {
-            if (data.status === 'approve' || data.status === 'approved') {
-               console.log("🟢 APPROVED! Updating UI...");
-               setPaymentState("approved"); // Set UI immediately
-               try { 
-                 await update({ isPro: true }); 
-               } catch(e) {
-                 console.error("Session update failed:", e);
-               }
-            } else if (data.status === 'reject' || data.status === 'rejected') {
-               setPaymentState("idle");
-               setError("Your payment was rejected by the administrator. Please try again or contact support.");
-            }
-         }
-       };
-       socket.on('payment_status_update', handler);
-       return () => socket.off('payment_status_update', handler);
-    }
-  }, [socket, paymentState, transactionId, update]);
+    // Intentionally left empty as we don't rely on sockets for approval anymore
+  }, []);
 
   if (paymentState === "pending") {
     return (
