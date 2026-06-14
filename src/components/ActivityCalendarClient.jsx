@@ -15,12 +15,12 @@ export default function ActivityCalendarClient() {
       
       // More activity recently, less in the past, some random gaps
       const isRecent = i < 30;
-      const randomFactor = Math.random();
+      const randomFactor = ((i * 7) % 10) / 10;
       
       let count = 0;
       if (randomFactor > 0.6) {
-        count = Math.floor(Math.random() * 3) + 1;
-        if (isRecent) count += Math.floor(Math.random() * 2);
+        count = (((i * 3) % 3) + 1);
+        if (isRecent) count += (((i * 11) % 2));
       }
 
       result.push({

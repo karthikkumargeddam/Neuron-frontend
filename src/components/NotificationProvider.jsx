@@ -21,7 +21,7 @@ export function NotificationProvider({ children }) {
       withCredentials: true,
     });
 
-    setSocket(socketInstance);
+    requestAnimationFrame(() => setSocket(socketInstance));
 
     socketInstance.on('connect', () => {
       console.log('Connected to notification server');

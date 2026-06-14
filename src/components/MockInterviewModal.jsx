@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Mic, MicOff, X, Volume2, User, Bot, Loader2 } from 'lucide-react';
 
 export default function MockInterviewModal({ isOpen, onClose, code }) {
@@ -11,6 +11,58 @@ export default function MockInterviewModal({ isOpen, onClose, code }) {
   
   const recognitionRef = useRef(null);
   const synthRef = useRef(null);
+
+  const speak = useCallback((text) => {
+    if (synthRef.current) {
+      synthRef.current.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      const voices = synthRef.current.getVoices();
+      const preferredVoice = voices.find(v => v.name.includes("Google US English")) || voices.find(v => v.lang === "en-US");
+      if (preferredVoice) utterance.voice = preferredVoice;
+      utterance.rate = 1.0;
+      utterance.pitch = 1.0;
+      synthRef.current.speak(utterance);
+    }
+  }, []);
+
+  const startInterview = useCallback(async () => {
+    setIsAiThinking(true);
+    try {
+      const res = await fetch('/api/mock-interview', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, answer: null })
+      });
+      const data = await res.json();
+      setChatLog([{ role: 'interviewer', content: data.reply }]);
+      speak(data.reply);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsAiThinking(false);
+    }
+  }, [code, speak]);
+
+  const handleUserResponse = useCallback(async (answer) => {
+    const newLog = [...chatLog, { role: 'user', content: answer }];
+    setChatLog(newLog);
+    setIsAiThinking(true);
+    
+    try {
+      const res = await fetch('/api/mock-interview', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, answer })
+      });
+      const data = await res.json();
+      setChatLog([...newLog, { role: 'interviewer', content: data.reply }]);
+      speak(data.reply);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsAiThinking(false);
+    }
+  }, [chatLog, code, speak]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -38,69 +90,15 @@ export default function MockInterviewModal({ isOpen, onClose, code }) {
         };
       }
     }
-  }, [transcript]);
+  }, [transcript, handleUserResponse]);
 
   useEffect(() => {
     if (isOpen && chatLog.length === 0) {
-      startInterview();
+      requestAnimationFrame(() => startInterview());
     }
-  }, [isOpen]);
+  }, [isOpen, chatLog.length, startInterview]);
 
-  const speak = (text) => {
-    if (synthRef.current) {
-      // Cancel any ongoing speech
-      synthRef.current.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      
-      // Try to find an English voice, preferably female or Google US English
-      const voices = synthRef.current.getVoices();
-      const preferredVoice = voices.find(v => v.name.includes("Google US English")) || voices.find(v => v.lang === "en-US");
-      if (preferredVoice) utterance.voice = preferredVoice;
-      
-      utterance.rate = 1.0;
-      utterance.pitch = 1.0;
-      synthRef.current.speak(utterance);
-    }
-  };
 
-  const startInterview = async () => {
-    setIsAiThinking(true);
-    try {
-      const res = await fetch('/api/mock-interview', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code, answer: null })
-      });
-      const data = await res.json();
-      setChatLog([{ role: 'interviewer', content: data.reply }]);
-      speak(data.reply);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setIsAiThinking(false);
-    }
-  };
-
-  const handleUserResponse = async (answer) => {
-    const newLog = [...chatLog, { role: 'user', content: answer }];
-    setChatLog(newLog);
-    setIsAiThinking(true);
-    
-    try {
-      const res = await fetch('/api/mock-interview', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code, answer })
-      });
-      const data = await res.json();
-      setChatLog([...newLog, { role: 'interviewer', content: data.reply }]);
-      speak(data.reply);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setIsAiThinking(false);
-    }
-  };
 
   const toggleListen = () => {
     if (isListening) {
@@ -164,7 +162,7 @@ export default function MockInterviewModal({ isOpen, onClose, code }) {
         {/* Controls */}
         <div className="bg-[#111] border-t border-[#333] p-6 shrink-0 flex flex-col items-center gap-4">
           <div className="text-center h-6">
-            {transcript && <p className="text-sm text-gray-300 font-mono italic">"{transcript}"</p>}
+            {transcript && <p className="text-sm text-gray-300 font-mono italic">&quot;{transcript}&quot;</p>}
             {!transcript && isListening && <p className="text-sm text-red-400 font-mono animate-pulse">Listening to your answer...</p>}
           </div>
           

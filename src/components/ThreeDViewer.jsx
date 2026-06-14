@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Stars, Sphere, MeshDistortMaterial, Line } from '@react-three/drei';
-import * as THREE from 'three';
 
 // 1. Quantum Bloch Sphere Simulation
 function QuantumSphere() {

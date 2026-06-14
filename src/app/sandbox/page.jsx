@@ -34,7 +34,7 @@ export default function SandboxPage() {
   };
 
   useEffect(() => {
-    fetchLabs();
+    requestAnimationFrame(() => fetchLabs());
   }, []);
 
   const filteredLabs = labs.filter(lab => 

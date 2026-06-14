@@ -2,10 +2,13 @@ import Link from "next/link";
 import { fetchAPI } from "../lib/api";
 import { Suspense } from "react";
 
-import Chatbot from "../components/Chatbot";
-import FeedbackWidget from "../components/FeedbackWidget";
+import dynamic from "next/dynamic";
 import ConnectWithUsForm from "../components/ConnectWithUsForm";
 import LeadMagnet from "../components/LeadMagnet";
+
+// Lazy load heavy client-side widgets for better mobile performance
+const Chatbot = dynamic(() => import("../components/Chatbot"), { ssr: false });
+const FeedbackWidget = dynamic(() => import("../components/FeedbackWidget"), { ssr: false });
 
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "./api/auth/[...nextauth]/route";
