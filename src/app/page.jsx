@@ -2,14 +2,10 @@ import Link from "next/link";
 import { fetchAPI } from "../lib/api";
 import { Suspense } from "react";
 
-import dynamic from "next/dynamic";
+import ClientWidgets from "../components/ClientWidgets";
+
 import ConnectWithUsForm from "../components/ConnectWithUsForm";
 import LeadMagnet from "../components/LeadMagnet";
-
-// Lazy load heavy client-side widgets for better mobile performance
-const Chatbot = dynamic(() => import("../components/Chatbot"), { ssr: false });
-const FeedbackWidget = dynamic(() => import("../components/FeedbackWidget"), { ssr: false });
-
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "./api/auth/[...nextauth]/route";
 import ConditionalPricing from "../components/ConditionalPricing";
@@ -308,8 +304,7 @@ export default async function Home() {
         {/* Footer padding */}
         <div className="h-32"></div>
       </main>
-      <Chatbot />
-      <FeedbackWidget />
+      <ClientWidgets />
     </div>
   );
 }
