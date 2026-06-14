@@ -76,6 +76,10 @@ export default function CodeEditorClient() {
     if (langObj) {
       setCode(langObj.defaultCode);
     }
+
+    if (isLiveShare && ydocRef.current) {
+      ydocRef.current.getMap('state').set('language', newLangId);
+    }
   };
 
   const handleSave = async () => {
@@ -131,10 +135,12 @@ export default function CodeEditorClient() {
       if (res.ok) {
         let finalOutput = '';
         if (data.output) finalOutput += data.output;
-        if (data.error) finalOutput += (finalOutput ? '\n' : '') + data.error;
-        setOutput(finalOutput.trim() || "Program exited with no output.");
+        const finalResult = finalOutput.trim() || "Program exited with no output.";
+        setOutput(finalResult);
+        if (isLiveShare && ydocRef.current) ydocRef.current.getMap('state').set('output', finalResult);
       } else {
         setOutput(data.error || "Execution error.");
+        if (isLiveShare && ydocRef.current) ydocRef.current.getMap('state').set('output', data.error || "Execution error.");
       }
     } catch (err) {
       setOutput(`Failed to connect to execution engine.\n${err.message}`);
@@ -207,9 +213,30 @@ export default function CodeEditorClient() {
       const ydoc = new Y.Doc();
       ydocRef.current = ydoc;
       
-      // Using public yjs websocket server for demonstration
-      const provider = new WebsocketProvider('wss://demos.yjs.dev/ws', newRoomId, ydoc);
+      // Connect to the Strapi Backend WebSocket Server instead of public demo
+      const wsUrl = (process.env.NEXT_PUBLIC_STRAPI_URL || 'http://127.0.0.1:1337').replace(/^http/, 'ws') + '/yjs';
+      const provider = new WebsocketProvider(wsUrl, newRoomId, ydoc);
       providerRef.current = provider;
+
+      // Set up Presence/Awareness (Remote Cursors & Names)
+      const userColor = '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
+      const userName = session?.user?.username || session?.user?.name || 'Anonymous';
+      provider.awareness.setLocalStateField('user', {
+        name: userName,
+        color: userColor
+      });
+
+      // Set up Global State Sync (Language and Terminal Output)
+      const ystate = ydoc.getMap('state');
+      ystate.observe(event => {
+        event.changes.keys.forEach((change, key) => {
+          if (key === 'language') {
+            setLanguage(ystate.get('language'));
+          } else if (key === 'output') {
+            setOutput(ystate.get('output'));
+          }
+        });
+      });
 
       const type = ydoc.getText('monaco');
       
