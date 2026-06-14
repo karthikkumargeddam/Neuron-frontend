@@ -45,6 +45,9 @@ export const metadata = {
     description: "Code, train, and deploy instantly in zero-setup virtual boxes.",
   },
   manifest: "/manifest.json",
+  verification: {
+    google: "FNz4HLWlEQgXlRDN78pK3-pVmxO7_bIIYSJrrv988ow",
+  },
 };
 
 export const viewport = {
