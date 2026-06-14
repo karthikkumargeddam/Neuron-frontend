@@ -28,7 +28,7 @@ export default function GlobalNav() {
         </div>
 
         {/* Right side: Auth */}
-        <div>
+        <div className="flex items-center">
           {session ? (
             <div className="flex items-center gap-4">
               <div className="text-sm font-mono text-[var(--secondary)] hidden sm:flex items-center">
