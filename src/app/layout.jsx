@@ -6,6 +6,7 @@ import Providers from "../components/Providers";
 import GlobalNav from "../components/GlobalNav";
 import Footer from "../components/Footer";
 import AuthGuard from "../components/AuthGuard";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,8 +19,30 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "NeuronLabs | Advanced Virtual Labs",
-  description: "Next-gen virtual laboratories for advanced technical education",
+  title: "NeuronLabs | Zero-Setup Virtual Sandboxes for Tech Education",
+  description: "Accelerate your tech career with interactive 3D WebGL labs, GPU-accelerated virtual boxes, and AI-powered technical mock interviews.",
+  keywords: ["Virtual Labs", "Coding Sandbox", "AI Mock Interviews", "GPU Cloud", "Tech Education", "Learn to Code"],
+  authors: [{ name: "NeuronLabs" }],
+  openGraph: {
+    title: "NeuronLabs | Zero-Setup Virtual Sandboxes",
+    description: "Code, train, and deploy instantly in zero-setup virtual boxes. Enhance your tech skills with live multiplayer syncing.",
+    url: "https://neuronlabs.app",
+    siteName: "NeuronLabs",
+    images: [
+      {
+        url: "/og-image.jpg", 
+        width: 1200,
+        height: 630,
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "NeuronLabs | The Future of Tech Education",
+    description: "Code, train, and deploy instantly in zero-setup virtual boxes.",
+  },
   manifest: "/manifest.json",
 };
 
@@ -41,6 +64,7 @@ export default function RootLayout({
           </main>
           <Footer />
         </Providers>
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || "G-XXXXXXXXXX"} />
       </body>
     </html>
   );

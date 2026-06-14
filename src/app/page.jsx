@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import Chatbot from "../components/Chatbot";
 import FeedbackWidget from "../components/FeedbackWidget";
 import ConnectWithUsForm from "../components/ConnectWithUsForm";
+import LeadMagnet from "../components/LeadMagnet";
 
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "./api/auth/[...nextauth]/route";
@@ -294,6 +295,9 @@ export default async function Home() {
             <PricingSection />
           </ConditionalPricing>
         )}
+
+        {/* Lead Magnet: Free 7-Day Sandbox Trial */}
+        <LeadMagnet />
 
         {/* Connect With Us Form */}
         <ConnectWithUsForm />
