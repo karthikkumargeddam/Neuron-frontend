@@ -3,9 +3,12 @@ import { useState } from 'react';
 import Script from 'next/script';
 import { useRouter } from 'next/navigation';
 
+import { useSession } from 'next-auth/react';
+
 export default function RazorpayCheckout({ amount, userEmail, className, children }) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { update } = useSession();
 
   const handlePayment = async () => {
     setLoading(true);
@@ -41,6 +44,7 @@ export default function RazorpayCheckout({ amount, userEmail, className, childre
           });
           
           if (verifyRes.ok) {
+            await update({ isPro: true });
             router.push('/dashboard');
             router.refresh(); 
           } else {
