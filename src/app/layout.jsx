@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 import Providers from "../components/Providers";
 import GlobalNav from "../components/GlobalNav";
 import Footer from "../components/Footer";
-import AuthGuard from "../components/AuthGuard";
+import AuthGuard from "../components/AuthGuard"; // Removed
 import { GoogleAnalytics } from "@next/third-parties/google";
 
 const geistSans = Geist({
@@ -91,9 +91,7 @@ export default function RootLayout({
         <Providers>
           <GlobalNav />
           <main className="pt-[124px] flex-grow flex flex-col">
-            <AuthGuard>
-              {children}
-            </AuthGuard>
+            {children}
           </main>
           <Footer />
         </Providers>
