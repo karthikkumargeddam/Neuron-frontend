@@ -12,7 +12,7 @@ export default async function sitemap() {
   // Fetch dynamic courses
   try {
     const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || 'https://wise-action-3f2ccfecaa.strapiapp.com';
-    const res = await fetch(`${strapiUrl}/api/courses`, { cache: 'no-store' });
+    const res = await fetch(`${strapiUrl}/api/courses`);
     if (res.ok) {
       const json = await res.json();
       const courses = json.data;
