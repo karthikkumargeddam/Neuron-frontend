@@ -13,14 +13,19 @@ export const authOptions = {
         try {
           // Handle Strapi OAuth tokens (e.g. Google Sign-In callback)
           if (credentials?.access_token) {
+            console.log("OAuth access_token received. Fetching from:", `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://127.0.0.1:1337'}/api/users/me`);
+            
             const userRes = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://127.0.0.1:1337'}/api/users/me?populate=*`, {
+              cache: 'no-store',
               headers: {
                 Authorization: `Bearer ${credentials.access_token}`,
               },
             });
-            const user = await userRes.json();
             
-            if (userRes.ok && user) {
+            const user = await userRes.json();
+            console.log("Strapi user response:", userRes.status, user);
+            
+            if (userRes.ok && user && user.id) {
               return {
                 id: user.id.toString(),
                 name: user.username,
@@ -31,13 +36,15 @@ export const authOptions = {
                 proValidUntil: user.proValidUntil || null,
                 proValidFrom: user.proValidFrom || null,
               };
+            } else {
+               throw new Error(`StrapiAuthFailed_${userRes.status}_${JSON.stringify(user).substring(0, 50)}`);
             }
-            return null;
           }
 
           // Handle standard Email/Password Login
           const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://127.0.0.1:1337'}/api/auth/local`, {
             method: "POST",
+            cache: 'no-store',
             headers: {
               "Content-Type": "application/json",
             },
