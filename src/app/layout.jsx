@@ -74,6 +74,19 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "name": "Neuron Labs",
+              "url": "https://neuronlabs.online/",
+            })
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col">
         <Providers>
           <GlobalNav />
