@@ -6,6 +6,8 @@ import { fetchAPI } from "../../../../lib/api";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../../api/auth/[...nextauth]/route";
 
+import RazorpayCheckout from "../../../../components/RazorpayCheckout";
+
 async function getCourseData(uuid) {
   try {
     const response = await fetchAPI('/api/courses', {
@@ -97,9 +99,7 @@ export default async function ModulePage({ params }) {
                        <p className="text-gray-400 mb-8 leading-relaxed">
                          This advanced module is locked. Upgrade to the ₹299 Pro Plan to unlock this deep dive, interactive sandboxes, and personalized AI tutoring.
                        </p>
-                       <a href="https://rzp.io/rzp/0Q7TNnKc" className="inline-block bg-[#0f9d58] text-white px-8 py-3 rounded-full font-bold hover:bg-[#0c8249] transition-all hover:scale-105 shadow-[0_0_20px_rgba(15,157,88,0.4)]">
-                         Unlock Pro Access - ₹299
-                       </a>
+                       <RazorpayCheckout amount={299} userEmail={session?.user?.email} />
                      </div>
                    </div>
                    <div className="opacity-20 select-none blur-[6px] pointer-events-none h-[600px] overflow-hidden">
