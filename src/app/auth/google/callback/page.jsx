@@ -18,7 +18,7 @@ function GoogleCallbackContent() {
       }).then((res) => {
         if (res?.error) {
           console.error("Failed to sign in with NextAuth:", res.error);
-          router.push('/auth/signin?error=OAuthSignInError');
+          router.push(`/auth/signin?error=${encodeURIComponent(res.error)}`);
         } else {
           // Success! Redirect to dashboard
           window.location.href = '/dashboard';
