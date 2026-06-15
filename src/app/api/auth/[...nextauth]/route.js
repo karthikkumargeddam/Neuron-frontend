@@ -11,7 +11,32 @@ export const authOptions = {
       },
       async authorize(credentials, req) {
         try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL || `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://127.0.0.1:1337'}`}/api/auth/local`, {
+          // Handle Strapi OAuth tokens (e.g. Google Sign-In callback)
+          if (credentials?.access_token) {
+            const userRes = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://127.0.0.1:1337'}/api/users/me?populate=*`, {
+              headers: {
+                Authorization: `Bearer ${credentials.access_token}`,
+              },
+            });
+            const user = await userRes.json();
+            
+            if (userRes.ok && user) {
+              return {
+                id: user.id.toString(),
+                name: user.username,
+                email: user.email,
+                jwt: credentials.access_token,
+                role: "Student", 
+                isPro: user.isPro || false,
+                proValidUntil: user.proValidUntil || null,
+                proValidFrom: user.proValidFrom || null,
+              };
+            }
+            return null;
+          }
+
+          // Handle standard Email/Password Login
+          const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://127.0.0.1:1337'}/api/auth/local`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
