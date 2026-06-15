@@ -15,16 +15,24 @@ export default function AuthGuard({ children }) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const protectedPrefixes = [
+    "/courses", "/datasets", "/playground", "/code-editor", 
+    "/labs", "/sandbox", "/virtual-box", "/builder", 
+    "/community", "/arena", "/leaderboard", "/careers", "/dashboard", "/virtual-toolbox"
+  ];
+
+  const isProtected = protectedPrefixes.some(prefix => pathname === prefix || pathname?.startsWith(prefix + '/'));
+
   useEffect(() => {
-    if (status === "unauthenticated" && !pathname?.startsWith("/auth/")) {
+    if (status === "unauthenticated" && isProtected) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
     }
-  }, [status, pathname]);
+  }, [status, pathname, isProtected]);
 
-  // Allow access to auth pages without popping up another auth modal
-  if (pathname?.startsWith("/auth/")) {
+  // If the route is not protected, just render the children normally without any blur or modal.
+  if (!isProtected) {
     return children;
   }
 

@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 import Providers from "../components/Providers";
 import GlobalNav from "../components/GlobalNav";
 import Footer from "../components/Footer";
-import AuthGuard from "../components/AuthGuard"; // Removed
+import AuthGuard from "../components/AuthGuard";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
 const geistSans = Geist({
@@ -20,20 +20,21 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://neuronlabs.online"),
-  title: "NeuronLabs | Zero-Setup Virtual Sandboxes for Tech Education",
-  description: "Accelerate your tech career with interactive 3D WebGL labs, GPU-accelerated virtual boxes, and AI-powered technical mock interviews.",
+  title: "NeuronLabs | The Future of Tech Education",
+  description: "Code, train, and deploy instantly in zero-setup virtual boxes.",
   keywords: ["Virtual Labs", "Coding Sandbox", "AI Mock Interviews", "GPU Cloud", "Tech Education", "Learn to Code"],
   authors: [{ name: "NeuronLabs" }],
   openGraph: {
-    title: "NeuronLabs | Zero-Setup Virtual Sandboxes",
-    description: "Code, train, and deploy instantly in zero-setup virtual boxes. Enhance your tech skills with live multiplayer syncing.",
+    title: "NeuronLabs | The Future of Tech Education",
+    description: "Code, train, and deploy instantly in zero-setup virtual boxes.",
     url: "https://neuronlabs.online",
-    siteName: "NeuronLabs",
+    siteName: "Neuron Labs",
     images: [
       {
-        url: "/og-image.jpg", 
+        url: "https://neuronlabs.online/og-image.png",
         width: 1200,
         height: 630,
+        alt: "NeuronLabs Banner",
       },
     ],
     locale: "en_US",
@@ -82,7 +83,8 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "WebSite",
               "name": "Neuron Labs",
-              "url": "https://neuronlabs.online/",
+              "alternateName": "NeuronLabs",
+              "url": "https://neuronlabs.online/"
             })
           }}
         />
@@ -91,7 +93,9 @@ export default function RootLayout({
         <Providers>
           <GlobalNav />
           <main className="pt-[124px] flex-grow flex flex-col">
-            {children}
+            <AuthGuard>
+              {children}
+            </AuthGuard>
           </main>
           <Footer />
         </Providers>
