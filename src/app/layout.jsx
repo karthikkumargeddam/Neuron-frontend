@@ -44,6 +44,11 @@ export const metadata = {
     title: "NeuronLabs | The Future of Tech Education",
     description: "Code, train, and deploy instantly in zero-setup virtual boxes.",
   },
+  icons: {
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
+    apple: "/icon.svg",
+  },
   manifest: "/manifest.json",
   verification: {
     google: "FNz4HLWlEQgXlRDN78pK3-pVmxO7_bIIYSJrrv988ow",
