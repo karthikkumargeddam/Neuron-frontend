@@ -45,8 +45,8 @@ export default function RazorpayCheckout({ amount, userEmail, className, childre
           
           if (verifyRes.ok) {
             await update({ isPro: true });
-            router.push('/dashboard');
-            router.refresh(); 
+            // Force a hard reload to clear Next.js aggressive client-side cache
+            window.location.href = '/dashboard';
           } else {
             alert("Payment verification failed. Please contact support.");
           }
