@@ -452,7 +452,22 @@ export default function CodeEditorClient() {
             </button>
           </div>
           <div className="flex-1 p-4 overflow-y-auto font-mono text-sm whitespace-pre-wrap text-green-400 custom-scrollbar">
-            {output || <span className="text-gray-600 italic">No output yet. Click 'Run' to execute code.</span>}
+            {output ? (
+              output.includes('NEURON_IMAGE:') ? (
+                <div className="flex flex-col gap-4">
+                  <span>{output.split('NEURON_IMAGE:')[0]}</span>
+                  <img 
+                    src={output.split('NEURON_IMAGE:')[1].trim()} 
+                    alt="Execution Plot" 
+                    className="max-w-full md:max-w-[600px] rounded shadow-lg border border-gray-700 bg-white" 
+                  />
+                </div>
+              ) : (
+                <span>{output}</span>
+              )
+            ) : (
+              <span className="text-gray-600 italic">No output yet. Click 'Run' to execute code.</span>
+            )}
           </div>
         </div>
       </div>
