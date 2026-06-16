@@ -86,7 +86,7 @@ export default async function ModulePage({ params }) {
         <div className="max-w-none relative">
           {typeof activeModule === 'object' && activeModule.explanation ? (
             <>
-              {index > 0 && !session?.user?.isPro ? (
+              {false && !session?.user?.isPro ? (
                 <div className="relative">
                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0a0a0a]/80 to-[#0a0a0a] z-10 flex flex-col items-center justify-end pb-20">
                      <div className="glass-panel p-8 text-center border-[#0f9d58]/30 max-w-lg mb-8 shadow-2xl relative z-20">
