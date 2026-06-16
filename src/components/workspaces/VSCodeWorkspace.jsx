@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Mermaid from "../Mermaid";
 
 export default function VSCodeWorkspace({ 
@@ -9,6 +9,23 @@ export default function VSCodeWorkspace({
   isExecuting, handleRunCode, 
   visualization 
 }) {
+  const [activeFile, setActiveFile] = useState("main.py");
+  const [files, setFiles] = useState({
+    "main.py": code || "# Write your Python code here...",
+    "utils.py": "def helper_function():\n    print('Helper executed')\n    return True\n\n# Add your utility functions here",
+    "dataset.csv": "id,feature_1,feature_2,label\n1,0.5,0.2,0\n2,0.8,0.9,1\n3,0.1,0.4,0\n4,0.6,0.7,1"
+  });
+
+  // Whenever code prop changes (from textarea), update our local files state
+  useEffect(() => {
+    setFiles(prev => ({ ...prev, [activeFile]: code }));
+  }, [code]);
+
+  const handleFileClick = (fileName) => {
+    setActiveFile(fileName);
+    setCode(files[fileName]);
+  };
+
   return (
     <div className="flex-grow flex flex-col md:flex-row gap-0 overflow-hidden bg-[#1e1e1e] rounded-lg border border-[#333] shadow-2xl">
       
@@ -27,20 +44,32 @@ export default function VSCodeWorkspace({
       </div>
 
       {/* Explorer Sidebar */}
-      <div className="w-60 bg-[#252526] flex-col border-r border-[#1e1e1e] hidden lg:flex">
+      <div className="w-60 bg-[#252526] flex-col border-r border-[#1e1e1e] hidden lg:flex select-none">
         <div className="text-[11px] uppercase text-gray-400 p-4 tracking-wider font-semibold">Explorer</div>
         <div className="flex-grow overflow-y-auto">
           <div className="px-4 py-1 text-sm text-gray-300 font-mono font-bold flex items-center gap-2 uppercase text-xs">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6"/></svg>
             NEURON_LAB
           </div>
-          <div className="pl-8 py-1 mt-1 text-sm text-cyan-400 font-mono flex items-center gap-2 bg-[#37373d]">
+          
+          <div 
+            onClick={() => handleFileClick("main.py")}
+            className={`pl-8 py-1 mt-1 text-sm font-mono flex items-center gap-2 cursor-pointer ${activeFile === "main.py" ? "bg-[#37373d] text-cyan-400" : "text-gray-400 hover:text-gray-200"}`}
+          >
             <span className="text-[#519aba]">{"{}"}</span> main.py
           </div>
-          <div className="pl-8 py-1 text-sm text-gray-400 hover:text-gray-200 font-mono flex items-center gap-2 cursor-pointer">
+          
+          <div 
+            onClick={() => handleFileClick("utils.py")}
+            className={`pl-8 py-1 text-sm font-mono flex items-center gap-2 cursor-pointer ${activeFile === "utils.py" ? "bg-[#37373d] text-cyan-400" : "text-gray-400 hover:text-gray-200"}`}
+          >
             <span className="text-yellow-500">{"{}"}</span> utils.py
           </div>
-          <div className="pl-8 py-1 text-sm text-gray-400 hover:text-gray-200 font-mono flex items-center gap-2 cursor-pointer">
+          
+          <div 
+            onClick={() => handleFileClick("dataset.csv")}
+            className={`pl-8 py-1 text-sm font-mono flex items-center gap-2 cursor-pointer ${activeFile === "dataset.csv" ? "bg-[#37373d] text-cyan-400" : "text-gray-400 hover:text-gray-200"}`}
+          >
             <span className="text-[#a074c4]">{"[]"}</span> dataset.csv
           </div>
         </div>
@@ -50,10 +79,25 @@ export default function VSCodeWorkspace({
       <div className="flex-grow flex flex-col min-w-0">
         {/* Editor Tabs */}
         <div className="flex bg-[#2d2d2d] h-9 border-b border-[#1e1e1e] overflow-x-auto overflow-y-hidden">
-          <div className="flex items-center px-4 bg-[#1e1e1e] text-cyan-400 text-sm font-mono border-t border-t-cyan-400 gap-2 min-w-max cursor-pointer">
-            <span className="text-[#519aba]">{"{}"}</span> main.py
-            <button className="ml-2 w-4 h-4 hover:bg-[#333] rounded flex items-center justify-center text-gray-400 hover:text-white">✕</button>
-          </div>
+          {Object.keys(files).map((fileName) => (
+            <div 
+              key={fileName}
+              onClick={() => handleFileClick(fileName)}
+              className={`flex items-center px-4 text-sm font-mono min-w-max cursor-pointer border-r border-[#1e1e1e] ${
+                activeFile === fileName 
+                  ? "bg-[#1e1e1e] text-cyan-400 border-t border-t-cyan-400" 
+                  : "bg-[#2d2d2d] text-gray-500 hover:bg-[#2d2d2d]/80"
+              }`}
+            >
+              <span className={`mr-2 ${fileName.endsWith('.py') ? (fileName === 'main.py' ? 'text-[#519aba]' : 'text-yellow-500') : 'text-[#a074c4]'}`}>
+                {fileName.endsWith('.py') ? "{}" : "[]"}
+              </span> 
+              {fileName}
+              {activeFile === fileName && (
+                <button className="ml-2 w-4 h-4 hover:bg-[#333] rounded flex items-center justify-center text-gray-400 hover:text-white">✕</button>
+              )}
+            </div>
+          ))}
         </div>
 
         {/* Editor & Vis Split */}
