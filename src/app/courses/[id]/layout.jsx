@@ -48,6 +48,8 @@ async function getCourseData(uuid) {
   return null;
 }
 
+import { CourseProvider } from "../../../components/CourseContext";
+
 export default async function CourseLayout({ children, params }) {
   const { id } = await params;
   const session = await getServerSession(authOptions);
@@ -58,19 +60,21 @@ export default async function CourseLayout({ children, params }) {
   }
 
   const userRole = session?.user?.role || "Guest";
-  
-  let isAuthorized = true;
+  const isAuthorized = true;
+  const totalModules = course.modules?.length || 0;
 
   return (
-    <div className="min-h-screen p-8 md:p-16 max-w-7xl mx-auto animate-fade-in">
-      <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">
-        <CourseSidebar course={course} />
-        
-        {/* CENTER: Main Article Content (60%) */}
-        {children}
+    <CourseProvider courseId={course.documentId || course.uuid || id} totalModules={totalModules}>
+      <div className="min-h-screen p-8 md:p-16 max-w-7xl mx-auto animate-fade-in">
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">
+          <CourseSidebar course={course} />
+          
+          {/* CENTER: Main Article Content (60%) */}
+          {children}
 
-        <RightSidebar courseId={course.documentId} isAuthorized={isAuthorized} />
+          <RightSidebar courseId={course.documentId} isAuthorized={isAuthorized} />
+        </div>
       </div>
-    </div>
+    </CourseProvider>
   );
 }
