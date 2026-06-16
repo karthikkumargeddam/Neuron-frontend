@@ -5,6 +5,7 @@ import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Suspense } from "react";
+import toast from "react-hot-toast";
 
 function SignInForm() {
   const router = useRouter();
@@ -13,13 +14,11 @@ function SignInForm() {
 
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
 
     try {
       const res = await signIn("credentials", {
@@ -30,14 +29,15 @@ function SignInForm() {
       });
 
       if (res?.error) {
-        setError("Invalid credentials. Please try again.");
+        toast.error("Invalid credentials. Please try again.");
       } else {
+        toast.success("Welcome back!");
         router.push(callbackUrl);
         router.refresh();
       }
     } catch (err) {
       console.error("SignIn error:", err);
-      setError("Authentication failed. Please check the console for details.");
+      toast.error("Authentication failed. Please check the console for details.");
     } finally {
       setLoading(false);
     }
@@ -54,12 +54,6 @@ function SignInForm() {
           <h1 className="text-3xl font-mono text-white mb-2">Initialize Session</h1>
           <p className="text-gray-400 font-mono text-sm">Sign in to access your lab clusters.</p>
         </div>
-
-        {error && (
-          <div className="bg-red-500/10 border border-red-500/50 text-red-400 p-3 rounded mb-6 text-sm font-mono text-center">
-            {error}
-          </div>
-        )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>

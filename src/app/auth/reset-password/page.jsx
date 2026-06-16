@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import toast from "react-hot-toast";
 
 function ResetPasswordContent() {
   const router = useRouter();
@@ -12,12 +13,11 @@ function ResetPasswordContent() {
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     if (!code) {
-      setError("Invalid or missing reset code. Please request a new password reset link.");
+      toast.error("Invalid or missing reset code. Please request a new password reset link.");
     }
   }, [code]);
 
@@ -26,12 +26,11 @@ function ResetPasswordContent() {
     if (!code) return;
 
     if (password !== passwordConfirmation) {
-      setError("Passwords do not match.");
+      toast.error("Passwords do not match.");
       return;
     }
 
     setLoading(true);
-    setError("");
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://127.0.0.1:1337'}/api/auth/reset-password`, {
@@ -50,14 +49,15 @@ function ResetPasswordContent() {
 
       if (response.ok) {
         setSuccess(true);
+        toast.success("Password Reset Successfully!");
         setTimeout(() => {
           router.push('/auth/signin');
         }, 3000);
       } else {
-        setError(data?.error?.message || "Failed to reset password. The link might have expired.");
+        toast.error(data?.error?.message || "Failed to reset password. The link might have expired.");
       }
     } catch (err) {
-      setError("Network error. Please try again later.");
+      toast.error("Network error. Please try again later.");
     } finally {
       setLoading(false);
     }
@@ -85,11 +85,6 @@ function ResetPasswordContent() {
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-5">
-            {error && (
-              <div className="bg-red-500/10 border border-red-500/50 text-red-500 text-xs font-mono p-3 rounded mb-6 text-center">
-                {error}
-              </div>
-            )}
 
             <div>
               <label className="block text-gray-400 text-sm font-mono mb-2">New Password</label>

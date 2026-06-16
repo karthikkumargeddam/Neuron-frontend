@@ -91,8 +91,13 @@ export const authOptions = {
       }
       
       // Handle manual session updates
-      if (trigger === "update" && session?.isPro !== undefined) {
-        token.isPro = session.isPro;
+      if (trigger === "update") {
+        if (session?.isPro !== undefined) {
+          token.isPro = session.isPro;
+        }
+        if (session?.name) {
+          token.name = session.name;
+        }
       }
       
       return token;

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import toast from "react-hot-toast";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -12,16 +13,14 @@ export default function SignUpPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL || `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://127.0.0.1:1337'}`}/api/auth/local/register`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://127.0.0.1:1337'}/api/auth/local/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -39,6 +38,8 @@ export default function SignUpPage() {
         throw new Error(data?.error?.message || "Registration failed.");
       }
 
+      toast.success("Account created successfully!");
+
       // Automatically sign in after successful registration
       const signInRes = await signIn("credentials", {
         redirect: false,
@@ -48,13 +49,13 @@ export default function SignUpPage() {
       });
 
       if (signInRes?.error) {
-        setError("Registered successfully, but auto-login failed.");
+        toast.error("Registered successfully, but auto-login failed.");
       } else {
         router.push("/");
         router.refresh();
       }
     } catch (err) {
-      setError(err.message);
+      toast.error(err.message);
     } finally {
       setLoading(false);
     }
@@ -69,12 +70,6 @@ export default function SignUpPage() {
           <h1 className="text-3xl font-mono text-white mb-2">Create Account</h1>
           <p className="text-gray-400 font-mono text-sm">Register a new researcher profile.</p>
         </div>
-
-        {error && (
-          <div className="bg-red-500/10 border border-red-500/50 text-red-400 p-3 rounded mb-6 text-sm font-mono text-center">
-            {error}
-          </div>
-        )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
