@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../api/auth/[...nextauth]/route";
 import { notFound } from "next/navigation";
-import { fetchAPI } from "../../../../lib/api";
+import { fetchAPI } from "../../../lib/api";
 import Link from "next/link";
 import { Award, Download, Share2 } from "lucide-react";
 

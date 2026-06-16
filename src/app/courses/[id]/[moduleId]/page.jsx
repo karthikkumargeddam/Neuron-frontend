@@ -7,7 +7,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../../api/auth/[...nextauth]/route";
 
 import RazorpayCheckout from "../../../../components/RazorpayCheckout";
-import ModuleRenderer from "../../../../../components/ModuleRenderer";
+import ModuleRenderer from "../../../../components/ModuleRenderer";
 
 async function getCourseData(uuid) {
   try {
