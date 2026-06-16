@@ -7,6 +7,7 @@ import PyTorchStudioWorkspace from "./workspaces/PyTorchStudioWorkspace";
 import TensorBoardWorkspace from "./workspaces/TensorBoardWorkspace";
 import SnowflakeWorkspace from "./workspaces/SnowflakeWorkspace";
 import TableauWorkspace from "./workspaces/TableauWorkspace";
+import TerminalWorkspace from "./workspaces/TerminalWorkspace";
 
 export default function VirtualToolbox() {
   const [activeTool, setActiveTool] = useState("vscode");
@@ -44,6 +45,7 @@ export default function VirtualToolbox() {
 
   const tools = [
     { id: "vscode", name: "VS Code", icon: "💻" },
+    { id: "terminal", name: "Terminal", icon: ">_" },
     { id: "jupyter", name: "Jupyter", icon: "📓" },
     { id: "pytorch", name: "PyTorch", icon: "🔥" },
     { id: "tensorboard", name: "TensorBoard", icon: "📈" },
@@ -90,6 +92,10 @@ export default function VirtualToolbox() {
             output={output} isExecuting={isExecuting} 
             handleRunCode={handleRunCode} 
           />
+        )}
+        
+        {activeTool === "terminal" && (
+          <TerminalWorkspace />
         )}
         
         {activeTool === "jupyter" && (
