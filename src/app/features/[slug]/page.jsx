@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import { ArrowLeft, Sparkles, Code, PlayCircle, Users } from "lucide-react";
-import { fetchAPI } from "../../../../../lib/api";
+import { fetchAPI } from "../../../lib/api";
 
 async function getFeatureData(slug) {
   try {
