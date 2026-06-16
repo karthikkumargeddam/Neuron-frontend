@@ -26,6 +26,7 @@ const TOP_LANGUAGES = [
   { id: 'php', name: 'PHP', defaultCode: '<?php\n  echo "Hello, World!";\n?>' },
   { id: 'csharp', name: 'C#', defaultCode: 'using System;\n\nclass Program {\n    static void Main() {\n        Console.WriteLine("Hello, World!");\n    }\n}' },
   { id: 'swift', name: 'Swift', defaultCode: 'print("Hello, World!")' },
+  { id: 'r', name: 'R', defaultCode: '# Hello World in R\nprint("Hello, World!")\n\n# Data Visualization Example\nx <- c(1, 2, 3, 4, 5)\ny <- c(2, 4, 6, 8, 10)\nplot(x, y, main="My Plot")' },
 ];
 
 export default function CodeEditorClient() {

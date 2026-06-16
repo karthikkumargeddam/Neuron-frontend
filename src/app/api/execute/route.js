@@ -20,7 +20,8 @@ export async function POST(request) {
       'ruby': 72,        // Ruby 2.7
       'php': 98,         // PHP 8.3
       'csharp': 51,      // C# Mono
-      'swift': 83        // Swift 5.2
+      'swift': 83,       // Swift 5.2
+      'r': 80            // R 4.0.0
     };
 
     const languageId = languageMap[language.toLowerCase()];
