@@ -183,7 +183,7 @@ function PricingSection() {
             <li className="flex items-center gap-3"><span className="text-cyan-600 dark:text-cyan-400">✓</span> Full Curriculum Access</li>
             <li className="flex items-center gap-3"><span className="text-cyan-600 dark:text-cyan-400">✓</span> 50hrs GPU Acceleration</li>
           </ul>
-          <CheckoutButton amount={299} planName="Pro" />
+          <CheckoutButton amount={1} planName="Pro" />
         </div>
 
         {/* Enterprise Plan */}
