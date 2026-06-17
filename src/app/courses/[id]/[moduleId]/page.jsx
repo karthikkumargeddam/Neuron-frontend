@@ -9,6 +9,19 @@ import { authOptions } from "../../../api/auth/[...nextauth]/route";
 import RazorpayCheckout from "../../../../components/RazorpayCheckout";
 import ModuleRenderer from "../../../../components/ModuleRenderer";
 
+function getRelevantVideo(course) {
+  const title = (course.title || "").toLowerCase();
+  if (title.includes("deep learning")) return "https://www.youtube.com/embed/aircAruvnKk?rel=0&modestbranding=1"; // 3B1B Neural Networks
+  if (title.includes("machine learning") || title.includes("ml")) return "https://www.youtube.com/embed/Gv9_4yMHFhI?rel=0&modestbranding=1"; // StatQuest ML
+  if (title.includes("computer vision")) return "https://www.youtube.com/embed/Oqm9vs10tBg?rel=0&modestbranding=1"; // CNNs
+  if (title.includes("data science") || title.includes("data engineering")) return "https://www.youtube.com/embed/X3paOmcrTjQ?rel=0&modestbranding=1"; // Data Science Introduction
+  if (title.includes("python")) return "https://www.youtube.com/embed/rfscVS0vtbw?rel=0&modestbranding=1"; // Python for Beginners
+  if (title.includes("generative ai") || title.includes("llm")) return "https://www.youtube.com/embed/zjkBMFhNj_g?rel=0&modestbranding=1"; // Intro to Large Language Models
+  
+  // Default fallback (e.g. general CS or Tech)
+  return "https://www.youtube.com/embed/yBOM_bIO_J8?rel=0&modestbranding=1";
+}
+
 async function getCourseData(uuid) {
   try {
     const response = await fetchAPI('/api/courses', {
@@ -72,7 +85,7 @@ export default async function ModulePage({ params }) {
       activeModule = {
         type: 'video',
         title: baseTitle,
-        videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0&modestbranding=1",
+        videoUrl: getRelevantVideo(course),
         description: baseText || "Welcome to the course. Watch this introductory video lecture to get started with the core concepts."
       };
     } else if (index === 1) {
