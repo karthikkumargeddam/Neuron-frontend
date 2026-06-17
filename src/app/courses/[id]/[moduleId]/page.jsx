@@ -18,7 +18,16 @@ async function getCourseData(uuid) {
     
     if (response?.data?.length > 0) {
       const course = response.data[0];
-      return course.attributes || course;
+      const attrs = course.attributes || course;
+      if (!attrs.modules || attrs.modules.length === 0) {
+        attrs.modules = [
+          { title: "Introduction Video" },
+          { title: "Core Concepts Reading" },
+          { title: "Knowledge Check" },
+          { title: "Practical Assignment" }
+        ];
+      }
+      return attrs;
     }
   } catch (e) {
     console.error("Failed to fetch course from Strapi", e);
