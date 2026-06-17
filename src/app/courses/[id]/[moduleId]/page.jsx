@@ -9,17 +9,20 @@ import { authOptions } from "../../../api/auth/[...nextauth]/route";
 import RazorpayCheckout from "../../../../components/RazorpayCheckout";
 import ModuleRenderer from "../../../../components/ModuleRenderer";
 
-function getRelevantVideo(course) {
-  const title = (course.title || "").toLowerCase();
-  if (title.includes("deep learning")) return "https://www.youtube.com/embed/aircAruvnKk?rel=0&modestbranding=1"; // 3B1B Neural Networks
-  if (title.includes("machine learning") || title.includes("ml")) return "https://www.youtube.com/embed/Gv9_4yMHFhI?rel=0&modestbranding=1"; // StatQuest ML
+function getRelevantVideo(course, moduleTitle) {
+  const cTitle = (course.title || "").toLowerCase();
+  const mTitle = (moduleTitle || "").toLowerCase();
+  const title = cTitle + " " + mTitle;
+
+  if (title.includes("deep learning")) return "https://www.youtube.com/embed/VyWAvY2CF9c?rel=0&modestbranding=1"; // FCC Deep Learning
+  if (title.includes("machine learning") || title.includes("ml")) return "https://www.youtube.com/embed/i_LwzRmAUM?rel=0&modestbranding=1"; // FCC ML
   if (title.includes("computer vision")) return "https://www.youtube.com/embed/Oqm9vs10tBg?rel=0&modestbranding=1"; // CNNs
-  if (title.includes("data science") || title.includes("data engineering")) return "https://www.youtube.com/embed/X3paOmcrTjQ?rel=0&modestbranding=1"; // Data Science Introduction
-  if (title.includes("python")) return "https://www.youtube.com/embed/rfscVS0vtbw?rel=0&modestbranding=1"; // Python for Beginners
-  if (title.includes("generative ai") || title.includes("llm") || title.includes("agent") || title.includes("reasoning") || title.includes("react")) return "https://www.youtube.com/embed/zjkBMFhNj_g?rel=0&modestbranding=1"; // Intro to Large Language Models
+  if (title.includes("data science") || title.includes("data engineering")) return "https://www.youtube.com/embed/ua-CiDNNj30?rel=0&modestbranding=1"; // FCC Data Science
+  if (title.includes("python")) return "https://www.youtube.com/embed/rfscVS0vtbw?rel=0&modestbranding=1"; // FCC Python
+  if (title.includes("generative ai") || title.includes("llm") || title.includes("agent") || title.includes("reasoning") || title.includes("react")) return "https://www.youtube.com/embed/mEsleV16qdo?rel=0&modestbranding=1"; // FCC Gen AI
   
-  // Default fallback to Harvard CS50 2023 Lecture 0
-  return "https://www.youtube.com/embed/bHIhgxav9jc?rel=0&modestbranding=1";
+  // Default fallback to Stanford CS229
+  return "https://www.youtube.com/embed/8_LwD1o5oEE?rel=0&modestbranding=1";
 }
 
 async function getCourseData(uuid) {
@@ -85,7 +88,7 @@ export default async function ModulePage({ params }) {
       activeModule = {
         type: 'video',
         title: baseTitle,
-        videoUrl: getRelevantVideo(course),
+        videoUrl: getRelevantVideo(course, baseTitle),
         description: baseText || "Welcome to the course. Watch this introductory video lecture to get started with the core concepts."
       };
     } else if (index === 1) {
