@@ -33,7 +33,7 @@ export default async function DashboardPage() {
       headers: {
         Authorization: `Bearer ${session.jwt}`,
       },
-      next: { revalidate: 60 }
+      cache: 'no-store'
     });
     if (res.ok) {
       freshUser = await res.json();

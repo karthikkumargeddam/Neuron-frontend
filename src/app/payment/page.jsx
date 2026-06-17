@@ -14,7 +14,7 @@ export default function PaymentPage() {
   const [error, setError] = useState("");
 
   const upiId = "kartikfiitjee68-5@okicici";
-  const amount = 299;
+  const amount = 1;
   const upiUrl = `upi://pay?pa=${upiId}&pn=NeuronLabs&am=${amount}&cu=INR`;
 
   const handleSubmit = async (e) => {
