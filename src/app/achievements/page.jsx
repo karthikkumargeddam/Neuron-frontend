@@ -96,7 +96,7 @@ async function AchievementsList() {
             <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${colorClass} blur-[80px] opacity-20`}></div>
             
             <div className="flex justify-between items-start mb-6 relative z-10">
-              <div className={`p-4 rounded-2xl ${isUnlocked ? \`bg-gradient-to-br \${colorClass} shadow-lg\` : 'bg-neutral-800'}`}>
+              <div className={`p-4 rounded-2xl ${isUnlocked ? `bg-gradient-to-br ${colorClass} shadow-lg` : 'bg-neutral-800'}`}>
                 {isUnlocked ? (
                   <IconComponent className="w-8 h-8 text-white" />
                 ) : (
