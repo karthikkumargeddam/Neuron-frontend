@@ -187,7 +187,7 @@ export default async function DashboardPage() {
                   <div className="p-3 bg-indigo-500/20 w-fit rounded-2xl mb-4">
                     <BookOpen className="w-6 h-6 text-indigo-400" />
                   </div>
-                  <h3 className="text-3xl font-bold mb-1">0</h3>
+                  <h3 className="text-3xl font-bold mb-1">{user.courses?.length || user.enrolled_courses?.length || 0}</h3>
                   <p className="text-neutral-400 font-medium">Enrolled Courses</p>
                 </div>
               </div>
@@ -200,7 +200,7 @@ export default async function DashboardPage() {
                   <div className="p-3 bg-purple-500/20 w-fit rounded-2xl mb-4">
                     <Code className="w-6 h-6 text-purple-400" />
                   </div>
-                  <h3 className="text-3xl font-bold mb-1">0</h3>
+                  <h3 className="text-3xl font-bold mb-1">{user.sandboxes?.length || user.virtual_boxes?.length || 0}</h3>
                   <p className="text-neutral-400 font-medium">Active Sandboxes</p>
                 </div>
               </div>
