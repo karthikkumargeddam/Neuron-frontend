@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Mermaid from "../Mermaid";
+import Editor from "@monaco-editor/react";
 
 export default function VSCodeWorkspace({ 
   code, setCode, 
@@ -124,18 +125,30 @@ export default function VSCodeWorkspace({
               </button>
             </div>
 
-            {/* Line numbers + Textarea */}
-            <div className="flex-grow flex overflow-auto custom-scrollbar p-2 relative text-[14px]">
-              <div className="w-10 flex-shrink-0 text-right pr-4 text-[#858585] font-mono select-none opacity-50 py-[2px] leading-[21px]">
-                {code.split('\\n').map((_, i) => (
-                  <div key={i}>{i + 1}</div>
-                ))}
-              </div>
-              <textarea
+            {/* Monaco Editor */}
+            <div className="flex-grow flex relative">
+              <Editor
+                height="100%"
+                theme="vs-dark"
+                path={activeFile}
+                defaultLanguage={activeFile.endsWith('.py') ? 'python' : 'csv'}
                 value={code}
-                onChange={(e) => setCode(e.target.value)}
-                className="w-full bg-transparent text-[#d4d4d4] font-mono resize-none outline-none whitespace-pre overflow-hidden leading-[21px]"
-                spellCheck="false"
+                onChange={(value) => setCode(value || "")}
+                options={{
+                  minimap: { enabled: true },
+                  fontSize: 14,
+                  wordWrap: "on",
+                  scrollBeyondLastLine: false,
+                  automaticLayout: true,
+                  padding: { top: 16 },
+                  fontFamily: "var(--font-mono)",
+                }}
+                loading={
+                  <div className="flex h-full items-center justify-center text-cyan-500 gap-3">
+                    <span className="animate-spin w-5 h-5 border-2 border-cyan-500 border-t-transparent rounded-full"></span>
+                    <span className="font-mono text-sm">Loading Editor...</span>
+                  </div>
+                }
               />
             </div>
           </div>
