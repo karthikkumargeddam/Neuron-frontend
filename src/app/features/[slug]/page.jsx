@@ -3,6 +3,7 @@ import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import { ArrowLeft, Sparkles, Code, PlayCircle, Users } from "lucide-react";
 import { fetchAPI } from "../../../lib/api";
+import FeatureDemoViewer from "../../../components/FeatureDemoViewer";
 
 async function getFeatureData(slug) {
   try {
@@ -79,46 +80,7 @@ export default async function FeaturePage({ params }) {
         <ArrowLeft className="w-4 h-4" /> Back to Home
       </Link>
       
-      <div className={`w-full rounded-3xl border ${mockData.border} bg-gradient-to-br ${mockData.gradient} p-8 md:p-16 relative overflow-hidden backdrop-blur-sm shadow-2xl`}>
-        <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-[100px]"></div>
-        
-        <div className="relative z-10 flex flex-col md:flex-row gap-12 items-center">
-          <div className="flex-1">
-            <div className="mb-6 inline-flex p-4 rounded-2xl bg-black/40 border border-white/10 backdrop-blur-md shadow-xl">
-              {mockData.icon}
-            </div>
-            <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-6 leading-tight">
-              {mockData.title}
-            </h1>
-            <p className="text-xl text-gray-300 mb-8 leading-relaxed max-w-2xl">
-              {mockData.description}
-            </p>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-              {mockData.highlights.map((highlight, idx) => (
-                <div key={idx} className="flex items-center gap-3 text-gray-200">
-                  <div className="w-2 h-2 rounded-full bg-cyan-400"></div>
-                  <span className="font-medium">{highlight}</span>
-                </div>
-              ))}
-            </div>
-            
-            <button className="px-8 py-4 bg-white text-black font-bold rounded-full hover:scale-105 transition-transform duration-300 shadow-[0_0_20px_rgba(255,255,255,0.3)]">
-              Unlock with Pro
-            </button>
-          </div>
-          
-          <div className="flex-1 w-full aspect-square md:aspect-[4/3] rounded-2xl bg-black/60 border border-white/10 overflow-hidden relative shadow-2xl flex items-center justify-center group">
-            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-            <PlayCircle className="w-20 h-20 text-white/50 group-hover:text-white/90 group-hover:scale-110 transition-all duration-500 cursor-pointer" />
-            <div className="absolute bottom-6 left-6 right-6">
-              <div className="h-2 w-full bg-white/20 rounded-full overflow-hidden">
-                <div className="h-full w-1/3 bg-cyan-400 rounded-full"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <FeatureDemoViewer mockData={mockData} slug={slug} />
     </main>
   );
 }
