@@ -102,7 +102,6 @@ export default function GlobalNav() {
             <Link href="/playground" className="text-gray-600 dark:text-gray-300 hover:text-rose-500 dark:hover:text-rose-400 transition-colors">Playground</Link>
             <Link href="/code-editor" className="text-gray-600 dark:text-gray-300 hover:text-purple-500 dark:hover:text-purple-400 transition-colors">Code Editor</Link>
             <Link href="/labs" className="text-gray-600 dark:text-gray-300 hover:text-fuchsia-500 dark:hover:text-fuchsia-400 transition-colors">Labs</Link>
-            <Link href="/sandbox" className="text-gray-600 dark:text-gray-300 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors">Sandbox</Link>
             <Link href="/virtual-box" className="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors">Virtual Box</Link>
             <Link href="/builder" className="text-cyan-400 hover:text-cyan-300 transition-colors flex items-center gap-1">
               Builder <span className="relative flex h-2 w-2 ml-1"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span><span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span></span>

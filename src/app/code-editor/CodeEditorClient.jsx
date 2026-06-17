@@ -29,7 +29,7 @@ const TOP_LANGUAGES = [
   { id: 'r', name: 'R', defaultCode: '# Hello World in R\nprint("Hello, World!")\n\n# Data Visualization Example\nx <- c(1, 2, 3, 4, 5)\ny <- c(2, 4, 6, 8, 10)\nplot(x, y, main="My Plot")' },
 ];
 
-export default function CodeEditorClient() {
+export default function CodeEditorClient({ initialChallengeId }) {
   const { data: session } = useSession();
   const [language, setLanguage] = useState(TOP_LANGUAGES[0].id);
   const [code, setCode] = useState(TOP_LANGUAGES[0].defaultCode);
@@ -57,6 +57,47 @@ export default function CodeEditorClient() {
       fetchSnippets();
     }
   }, [session]);
+
+  useEffect(() => {
+    if (initialChallengeId) {
+      fetchChallenge(initialChallengeId);
+    }
+  }, [initialChallengeId]);
+
+  const fetchChallenge = async (id) => {
+    try {
+      // API call to arena-challenges
+      const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://127.0.0.1:1337'}/api/arena-challenges?filters[documentId][$eq]=${id}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data?.data && data.data.length > 0) {
+          const challenge = data.data[0];
+          setTitle(challenge.title || 'Arena Challenge');
+          
+          let newCode = `/*\n  CHALLENGE: ${challenge.title}\n  ${challenge.description || ''}\n*/\n\n`;
+          if (challenge.starterCode) {
+            newCode += challenge.starterCode;
+          } else {
+            newCode += TOP_LANGUAGES.find(l => l.id === language)?.defaultCode || '';
+          }
+          setCode(newCode);
+          toast.success("Challenge loaded successfully!");
+        } else {
+          // Check mock fallback if it's mock-1, mock-2, etc.
+          if (id.startsWith('mock-')) {
+             setTitle('Mock Challenge');
+             setCode(`/*\n  Mock Challenge ID: ${id}\n  Solve the challenge!\n*/\n\n`);
+             toast.success("Loaded mock challenge");
+          } else {
+             toast.error("Challenge not found.");
+          }
+        }
+      }
+    } catch (e) {
+      console.error(e);
+      toast.error("Failed to fetch challenge details.");
+    }
+  };
 
   const fetchSnippets = async () => {
     try {

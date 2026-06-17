@@ -1,6 +1,12 @@
 "use client";
 import React, { useState } from "react";
 import { PlayCircle, ArrowLeft, Mic, User, Code, Share2 } from "lucide-react";
+import dynamic from "next/dynamic";
+
+const WebGLDemoCanvas = dynamic(() => import("./WebGLDemoCanvas"), {
+  ssr: false,
+  loading: () => <div className="text-cyan-400 font-mono animate-pulse">Initializing WebGL Context...</div>
+});
 
 export default function FeatureDemoViewer({ mockData, slug }) {
   const [isLaunched, setIsLaunched] = useState(false);
@@ -23,23 +29,8 @@ export default function FeatureDemoViewer({ mockData, slug }) {
         <div className="flex-1 relative bg-black flex items-center justify-center p-8">
           
           {slug === '3d-webgl-labs' && (
-            <div className="w-full h-full min-h-[500px] relative flex items-center justify-center">
-              {/* Fake 3D Scene using CSS for demonstration */}
-              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-30 animate-pulse"></div>
-              <div className="relative z-10 perspective-1000">
-                <div className="w-64 h-64 border-4 border-indigo-500/50 rounded-full flex items-center justify-center animate-[spin_10s_linear_infinite] shadow-[0_0_50px_rgba(99,102,241,0.5)]">
-                  <div className="w-48 h-48 border-4 border-cyan-400/80 rounded-full flex items-center justify-center animate-[spin_7s_linear_infinite_reverse]">
-                    <div className="w-32 h-32 border-4 border-purple-500/80 rounded-full flex items-center justify-center animate-[spin_5s_linear_infinite]">
-                      <div className="w-16 h-16 bg-white rounded-full shadow-[0_0_30px_rgba(255,255,255,1)]"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="absolute bottom-8 right-8 flex gap-4">
-                <button className="bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-mono border border-gray-700">Rotate X</button>
-                <button className="bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-mono border border-gray-700">Rotate Y</button>
-                <button className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-[0_0_15px_rgba(79,70,229,0.5)]">Apply Physics</button>
-              </div>
+            <div className="w-full h-full min-h-[500px] relative flex items-center justify-center p-4">
+              <WebGLDemoCanvas />
             </div>
           )}
 
