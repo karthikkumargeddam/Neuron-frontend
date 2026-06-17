@@ -2,11 +2,13 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
 export const dynamic = 'force-dynamic';
+import { Suspense } from "react";
 import Providers from "../components/Providers";
 import GlobalNav from "../components/GlobalNav";
 import Footer from "../components/Footer";
 import AuthGuard from "../components/AuthGuard";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import MarketingScripts from "../components/MarketingScripts";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -100,6 +102,9 @@ export default function RootLayout({
           <Footer />
         </Providers>
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || "G-XXXXXXXXXX"} />
+        <Suspense fallback={null}>
+          <MarketingScripts />
+        </Suspense>
       </body>
     </html>
   );
