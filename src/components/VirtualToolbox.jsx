@@ -9,8 +9,8 @@ import SnowflakeWorkspace from "./workspaces/SnowflakeWorkspace";
 import TableauWorkspace from "./workspaces/TableauWorkspace";
 import TerminalWorkspace from "./workspaces/TerminalWorkspace";
 
-export default function VirtualToolbox() {
-  const [activeTool, setActiveTool] = useState("vscode");
+export default function VirtualToolbox({ initialTool = "vscode" }) {
+  const [activeTool, setActiveTool] = useState(initialTool);
   const [code, setCode] = useState("# Write your Python code here...");
   const [output, setOutput] = useState("Waiting for execution...");
   const [isExecuting, setIsExecuting] = useState(false);

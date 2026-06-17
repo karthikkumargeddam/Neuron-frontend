@@ -17,7 +17,7 @@ export default function AuthGuard({ children }) {
 
   const protectedPrefixes = [
     "/courses", "/datasets", "/playground", "/code-editor", 
-    "/labs", "/sandbox", "/virtual-box", "/builder", 
+    "/labs", "/sandbox", "/virtual-box", "/virtual-toolbox", "/builder", 
     "/community", "/arena", "/leaderboard", "/careers", "/dashboard"
   ];
 

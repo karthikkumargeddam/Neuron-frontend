@@ -166,8 +166,15 @@ export default async function DashboardPage() {
                  </Link>
                  <Link href="/virtual-box" className="flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-colors group">
                     <span className="flex items-center gap-3 text-neutral-300 group-hover:text-white transition-colors">
-                      <Code className="w-4 h-4 text-neutral-500 group-hover:text-purple-400 transition-colors" />
+                      <Terminal className="w-4 h-4 text-neutral-500 group-hover:text-indigo-400 transition-colors" />
                       Virtual Box
+                    </span>
+                    <ChevronRight className="w-4 h-4 text-neutral-600 group-hover:text-white transition-colors" />
+                 </Link>
+                 <Link href="/virtual-toolbox" className="flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-colors group">
+                    <span className="flex items-center gap-3 text-neutral-300 group-hover:text-white transition-colors">
+                      <Code className="w-4 h-4 text-neutral-500 group-hover:text-purple-400 transition-colors" />
+                      Virtual Toolbox
                     </span>
                     <ChevronRight className="w-4 h-4 text-neutral-600 group-hover:text-white transition-colors" />
                  </Link>
