@@ -238,10 +238,10 @@ export default async function Home() {
 
         <div className="flex items-center gap-6 mb-12 animate-fade-in" style={{ animationDelay: '0.25s' }}>
           <Link 
-            href="/virtual-toolbox" 
+            href="/virtual-box" 
             className="bg-gradient-to-r from-cyan-500 to-indigo-500 text-white px-8 py-4 rounded-full font-bold shadow-[0_0_30px_rgba(56,189,248,0.4)] hover:shadow-[0_0_40px_rgba(56,189,248,0.6)] hover:-translate-y-1 transition-all flex items-center gap-3"
           >
-            Launch Virtual Toolbox
+            Launch Virtual Box
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
           </Link>
           <Link 

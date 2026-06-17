@@ -18,7 +18,7 @@ export default function AuthGuard({ children }) {
   const protectedPrefixes = [
     "/courses", "/datasets", "/playground", "/code-editor", 
     "/labs", "/sandbox", "/virtual-box", "/builder", 
-    "/community", "/arena", "/leaderboard", "/careers", "/dashboard", "/virtual-toolbox"
+    "/community", "/arena", "/leaderboard", "/careers", "/dashboard"
   ];
 
   const isProtected = protectedPrefixes.some(prefix => pathname === prefix || pathname?.startsWith(prefix + '/'));
