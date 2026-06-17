@@ -29,6 +29,17 @@ export default function CheckoutButton({ amount, planName, className }) {
     );
   }
 
+  if (session?.user?.isPro) {
+    return (
+      <button 
+        disabled
+        className={className || "w-full py-4 rounded-full font-bold bg-gray-800 text-gray-400 shadow-none cursor-not-allowed"}
+      >
+        Already a Pro Member
+      </button>
+    );
+  }
+
   return (
     <div onClick={handleCheckout} className="w-full">
       <RazorpayCheckout 

@@ -35,7 +35,11 @@ export default function SignUpPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data?.error?.message || "Registration failed.");
+        const errorMessage = data?.error?.message || "Registration failed.";
+        if (errorMessage.toLowerCase().includes("taken")) {
+            throw new Error("This Username or Email is already taken. Please choose a different one.");
+        }
+        throw new Error(errorMessage);
       }
 
       toast.success("Account created successfully!");
