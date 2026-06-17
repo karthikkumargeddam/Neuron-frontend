@@ -5,8 +5,9 @@ import GlobalNav from "@/components/GlobalNav";
 import { notFound } from 'next/navigation';
 
 export async function generateMetadata({ params }) {
+  const { id } = await params;
   return {
-    title: `Arena Challenge | NeuronLabs`,
+    title: `Arena Challenge #${id} | NeuronLabs`,
     description: 'Solve research challenges and earn bounty points.',
   };
 }
@@ -59,7 +60,8 @@ async function getChallenge(id) {
 }
 
 export default async function ArenaChallengeDetail({ params }) {
-  const challenge = await getChallenge(params.id);
+  const { id } = await params;
+  const challenge = await getChallenge(id);
 
   if (!challenge) {
     notFound();
@@ -126,7 +128,7 @@ export default async function ArenaChallengeDetail({ params }) {
           
           <div className="flex flex-col sm:flex-row gap-4 pt-8 border-t border-white/10 relative z-10">
             <Link 
-              href={`/code-editor?challengeId=${params.id}`} 
+              href={`/code-editor?challengeId=${id}`} 
               className="px-8 py-4 bg-amber-500 hover:bg-amber-400 text-black font-bold rounded-lg text-lg transition-colors flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:shadow-[0_0_30px_rgba(245,158,11,0.5)]"
             >
               <Code2 className="w-6 h-6" />
